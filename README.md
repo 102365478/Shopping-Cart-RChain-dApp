@@ -1,4 +1,4 @@
-#Shopping-Cart-RChain-dApp
+# Shopping-Cart-RChain-dApp
 
 A rchain shopping cart dapp demo.
 
@@ -12,7 +12,11 @@ My cart html/css/js copyed from https://github.com/gtsopour/nodejs-shopping-cart
 
 Using hello-rchain api to interact with rchain blockchain, hello-rchain is the origin repo I forked from, which is based on rchain-toolkit
 
+## Prerequisites
+
 To use my dapp you need node.js env, node.js v18.18.0 and Ubuntu 20.04 is my working env.
+
+## Usage
 
 After cloning my dapp, `cd` to the root directory.
 
