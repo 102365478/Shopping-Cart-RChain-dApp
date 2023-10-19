@@ -3,13 +3,17 @@
 A rchain shopping cart dapp demo.
 
 I achieved login/register based on blockchain, upload/buy item based on blockchain.
+
 My work mainly focused on the development of blockchain.
 
 My login html/css/js copyed from https://github.com/acmenlei/login-form
+
 My cart html/css/js copyed from https://github.com/gtsopour/nodejs-shopping-cart
+
 Using hello-rchain api to interact with rchain blockchain, hello-rchain is the origin repo I forked from, which is based on rchain-toolkit
 
 To use my dapp you need node.js env, node.js v18.18.0 and Ubuntu 20.04 is my working env.
+
 After cloning my dapp, `cd` to the root directory.
 
 1.Starting rchain server
