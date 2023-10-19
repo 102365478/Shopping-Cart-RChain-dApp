@@ -17,15 +17,19 @@ To use my dapp you need node.js env, node.js v18.18.0 and Ubuntu 20.04 is my wor
 After cloning my dapp, `cd` to the root directory.
 
 1.Starting rchain server
+
     ```bash
     npm run rnode
     ```
+
 2.In another terminal, run the following command for all virtual machines to start nodejs server:
+
     ```bash
     cd bin
     npm run rnode
     ``` 
-3.open you browse `localhost:3000` to use our dapp
+    
+3.open your browse `localhost:3000` to use our dapp
 
 
 Below are origin repo README, which I forked from.
