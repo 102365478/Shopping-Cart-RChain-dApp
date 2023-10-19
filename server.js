@@ -3,6 +3,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const rho_deploy = require('./lib/rho_deploy.js');
+const setter = require('./lib/setter.js');
+const coder = require('./lib/coder.js');
 
 // Parse command-line arguments
 var host   = process.argv[2] ? process.argv[2] : "localhost"
@@ -13,6 +15,8 @@ var uiPort = process.argv[4] ? process.argv[4] : 8080
 var app = express();
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'));
+
+
 
 // Start the express app
 app.listen(uiPort, () => {
@@ -25,31 +29,28 @@ app.get('/', (req,res) => {
   res.sendFile(__dirname + '/public/hello.html');
 });
 
-// Handle users registering new games
-app.post('/getInfo', (req, res) => {
-  let rho_code = `new getInfo, setInfo, message in {
-    @{"global_factory"}!(*getInfo, *setInfo)
-    |
-    getInfo!(*message)
-  }`;
 
-  rho_deploy.func_deploy(rho_code, 2).then(
+app.post('/get', (req, res) => {
+  setter.getter(req.body.name).then(
     (ret) => {
       res.end("\"" + ret + "\"");
+      console.log("get: " + req.body.name + " " + ret + "\n");
     }
   );
 });
 
-app.post('/setInfo', (req, res) => {
-  let rho_code = `new getInfo, setInfo in {
-    @{"global_factory"}!(*getInfo, *setInfo)
-    |
-    setInfo!("${req.body.name}")
-  }`;
+app.post('/set', (req, res) => {
 
-  rho_deploy.func_deploy(rho_code, -1).then(
+  setter.setter(req.body.name, req.body.value).then(
     () => {
-      res.end("\"" + "SetInfo();" + "\"");
+      res.end("\"" + "Set();" + "\"");
+      console.log("set: " + req.body.name + " " + req.body.value + "\n");
     }
   );
+});
+
+app.post('/new', (req, res) => {
+
+  setter.new_deploy("A");
+  setter.new_deploy("B");
 });

@@ -1,0 +1,10 @@
+[
+  {
+    "id": "Apples",
+    "title": "Apples",
+    "seller": "lxt",
+    "description": "Apples are <span class=\"label label-info\">25 each</span>",
+    "price": 25,
+    "count": 10
+  }
+]

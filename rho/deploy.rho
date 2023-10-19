@@ -1,19 +1,19 @@
-new message in {
-	contract @{"global_factory"}(getInfo, setInfo) = {
-		contract getInfo(ret) = {
-			for (msg <- message){
-				ret!(*msg)
+new messageB in {
+	contract @{"global_factory_B"}(getB, setB) = {
+		contract getB(retB) = {
+			for (msgB <- messageB){
+				retB!(*msgB)
 				|
-				message!(*msg)
+				messageB!(*msgB)
 			}
 		}
 		|
-		contract setInfo(newMessage) = {
-			for (msg <- message) {
-				message!(*newMessage)
+		contract setB(newMessageB) = {
+			for (msgB <- messageB) {
+				messageB!(*newMessageB)
 			}
 		}
 	}
 	|
-	message!("Hello")
+	messageB!("Hello")
 }

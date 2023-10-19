@@ -1,0 +1,165 @@
+<div class="row">
+    <div class="col-xs-4">
+        <div class="pull-left">
+        <a href="/main/"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
+        </div>
+    </div>
+
+    <div class="col-xs-8">
+        <div class="dropdown pull-right">
+            <a
+            
+             class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-shopping-cart" aria-hidden="true"></i> Cart
+                {{# if session.cart.totalItems }}
+                <span>({{session.cart.totalItems}})</span>
+                {{/if}}
+            </a>
+            {{# if session.cart.totalItems }}
+            <div class="dropdown-menu">
+                <div class="cart">
+                    {{# each session.cart.items }}
+                    <div class="row">
+                        <div class="col-xs-4">
+                            {{ this.item.title }}
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            <span class="badge">{{ this.quantity }}</span>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            {{ this.price }} 
+                        </div>
+                    </div>
+                    {{/each}}
+                    <div class="row">
+                        <div class="text-right">
+                            <div class="totalPrice">Total: {{ session.cart.totalPrice }} </div>
+                            <a href="/cart/" class="btn btn-success">Procceed</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+
+    <div class="col-xs-6">
+        <div class="pull-left">
+        <a href="/main/"><i class="fa fa-home" aria-hidden="true"></i> Balance: {{money}}</a>
+        </div>
+    </div>
+
+    <div class="col-xs-6">
+        <div class="dropdown pull-right">
+            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-shopping-cart" aria-hidden="true">Upload</i> 
+            </a>
+
+            <div class="dropdown-menu">
+                <input class="dropdown-item" type="text" id="id_text" placeholder="item name">
+                <input class="dropdown-item" type="text" id="price_text" placeholder="item price">
+                <input class="dropdown-item" type="text" id="count_text" placeholder="item count">
+                <button class="dropdown-item" id="upload_btn" >Upload Item</button>
+                    
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+<script>
+
+
+const new_dep1 = async (name) => {
+    let body = {
+      name: name,
+    };
+  
+    console.log('/new/' + name);
+
+    // Actually send it
+    makePost1('/new/' + name, body)
+    .then(ret => {
+      console.log(ret);
+    }); 
+}
+  
+const get1 = async (name) => {
+    let body = {
+      name: name,
+    };
+
+    var src = "/get/1/" + name;
+
+    console.log(src);
+
+  
+    // Actually send it
+    makePost1(src, body)
+    .then((ret) => {
+      //value.value = ret;
+      //username = name;
+      //money = ret;
+      //return ret;
+    });
+    // Clear the DOM to prevent double posts
+    //value.value = "";
+}
+  
+const set1 = async (name, value) => {
+    let body = {
+      name: name,
+      value: value,
+    };
+
+    console.log(value)
+
+    var src = "/set/" + name + "/" + value;
+  
+    console.log(src);
+
+    makePost1(src, body)
+    .then(ret => {
+      console.log(ret);
+    });
+  
+}
+  
+const makePost1 = async (route, body) => {
+    let request = {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
+      }
+    };
+  
+    return fetch(route, request)
+    .then(ret => {return ret.json()});
+}
+
+
+document.getElementById('upload_btn').addEventListener('click', async function(){
+    var name = document.getElementById("id_text").value;
+    var price = document.getElementById("price_text").value;
+    var count = document.getElementById("count_text").value;
+    new_dep1(`${name}`).then(
+        () => {
+            set1(`${name}`, "" + price + "," + count);
+        
+            var src = "/newitem/" + name + "/" + price + "/" + count;
+            console.log(src);
+            makePost1(src, name).then(
+                () => {
+                    location.reload();
+                }
+            );
+            
+        }
+    );
+});
+
+
+</script>

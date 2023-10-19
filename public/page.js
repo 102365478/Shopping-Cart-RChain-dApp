@@ -3,39 +3,46 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   // Grab DOM items
-  let global_str = document.getElementById('global_str');
+  let global_A = document.getElementById('global_A');
+  let global_B = document.getElementById('global_B');
   //TODO Add controls for call later
 
   // Event Listeners
-  document.getElementById('get_info').addEventListener('click', getInfo);
-  document.getElementById('set_info').addEventListener('click', setInfo);
-  //TODO Add click listener to make call later
+  document.getElementById('get_A').addEventListener('click', function(){get("A", global_A);});
+  document.getElementById('set_A').addEventListener('click', function(){set("A", global_A);});
+  document.getElementById('get_B').addEventListener('click', function(){get("B", global_B);});
+  document.getElementById('set_B').addEventListener('click', function(){set("B", global_B);});
+  document.getElementById('new').addEventListener('click', function(){makePost('/new');});
   
-  function getInfo(){
-    let body = {};
+  function get(name, value){
+    let body = {
+      name: name,
+      value: value.value,
+    };
 
     // Actually send it
-    makePost('/getInfo', body)
+    makePost('/get', body)
     .then(res => {
       console.log(res);
-      global_str.value = res;
+      value.value = res;
     });
 
     // Clear the DOM to prevent double posts
-    global_str.value = "";
+    value.value = "";
   };
 
-  function setInfo(){
+  function set(name, value){
     let body = {
-      name: global_str.value,
+      name: name,
+      value: value.value,
     }
 
-    makePost('/setInfo', body)
+    makePost('/set', body)
     .then(res => {
       console.log(res);
     });
 
-    global_str.value = "";
+    value.value = "";
   };
 
   //TODO Add event handler to make a call later
@@ -55,6 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       body: JSON.stringify(body)
     };
+    // console.log("heres");
 
     return fetch(route, request)
     .then(res => {return res.json()});
