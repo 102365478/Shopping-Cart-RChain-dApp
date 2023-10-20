@@ -2,6 +2,13 @@ var express = require('express');
 var router = express.Router();
 var app = express();
 
+const jsdom = require("jsdom");
+const {JSDOM} = jsdom;
+const dom = new JSDOM(`<!DOCTYPE html><p>Hello world</p>`);
+window = dom.window;
+document = window.document;
+XMLHttpRequest = window.XMLHttpRequest;
+
 var fs = require('fs');
 
 var Cart = require('../models/cart');
@@ -79,10 +86,16 @@ router.get('/buy/:sellername/:itemid/:price/:itemcountbef', function(req, res, n
   var temp = localStorage.getItem("money");
   var money  = JSON.parse(temp);
   var a = JSON.parse(req.params.price);
+
+  if ( req.params.itemcountbef <= 0 ) {
+    // document.getElementById("soldout").style.display = "none";
+    return;
+  }
   
   setter.getter(req.params.sellername).then(
     (ret) => {
       // console.log("getB" + ret);
+      if (ret == "NaN" || ret == "null") { ret = 0; }
       var s = parseInt(ret);
       var b = parseInt(ret) + a;
       setter.setter(req.params.sellername, b).then(
@@ -90,6 +103,19 @@ router.get('/buy/:sellername/:itemid/:price/:itemcountbef', function(req, res, n
           // res.end("\"" + "set: " + req.params.id + " " + req.params.value + "\n" + "\"");
           console.log("set: " + req.params.sellername + " " + JSON.parse(s) + " + " + a + " " + b + "\n");
           var str = "" + a + "," + (req.params.itemcountbef - 1);
+          
+
+          for ( i = 0; i < products.length; ++i ) {
+            // console.log(products[i]);
+            if ( products[i].title == req.params.itemid ) {
+              products[i].count = req.params.itemcountbef - 1;
+              if ( products[i].count == 0 ) {
+                products[i].description = "<span class=\"label label-danger\">Sold Out!</span>";
+              }
+              // console.log(products[i]);
+              break;
+            }
+          }
 
           setter.setter(req.params.itemid, str).then(
             (ret) => {
@@ -151,6 +177,7 @@ router.get('/get/:type/:id', (req, res, next) => {
       if (req.params.type == 1) {
         localStorage.setItem("username", JSON.stringify(req.params.id));
         localStorage.setItem("money", JSON.stringify(ret));
+        res.redirect('/main/');
   
       } else if (req.params.type == 2) {
 
