@@ -30,7 +30,7 @@ After cloning my dapp, `cd` to the root directory.
 
     ```bash
     cd bin
-    npm run rnode
+    npm run start
     ``` 
     
 3.open your browse `localhost:3000` to use our dapp
