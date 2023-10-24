@@ -49,21 +49,30 @@
         </div>
     </div>
 
-    <div class="col-xs-6">
-        <div class="dropdown pull-right">
-            <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-shopping-cart" aria-hidden="true">Upload</i> 
-            </a>
+<div class="col-xs-6">
+    <div class="dropdown pull-right">
+        <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-shopping-cart" aria-hidden="true"></i> Upload
+        </a>
 
-            <div class="dropdown-menu">
-                <input class="dropdown-item" type="text" id="id_text" placeholder="item name">
-                <input class="dropdown-item" type="text" id="price_text" placeholder="item price">
-                <input class="dropdown-item" type="text" id="count_text" placeholder="item count">
-                <button class="dropdown-item" id="upload_btn" >Upload Item</button>
-                    
-            </div>
+        <div class="dropdown-menu" style="width: 300px;">
+            <form class="px-4 py-3">
+                <div class="form-group" style="width: 260px; margin-left: 15px;">
+                    <input type="text" class="form-control" id="id_text" placeholder="Item name">
+                </div>
+                <div class="form-group" style="width: 260px; margin-left: 15px;">
+                    <input type="text" class="form-control" id="price_text" placeholder="Item price">
+                </div>
+                <div class="form-group" style="width: 260px; margin-left: 15px;">
+                    <input type="text" class="form-control" id="count_text" placeholder="Item count">
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success" id="upload_btn">Upload Item</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
 </div>
 
