@@ -22,10 +22,14 @@
             <p class="description">{{{this.description}}}</p>
             <div class="clearfix">
             <div class="price pull-left"><i class="fa fa-tag" aria-hidden="true"></i> {{ this.price }}</div>
-              <a href="/add/{{ this.id }}" class="btn btn-default pull-right" role="button"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Add to cart</a>
-                
-              <a href="/buy/{{this.seller}}/{{ this.id }}/{{this.price}}/{{this.count}}" class="btn btn-default pull-right" role="button" onclick=""><i class="fa fa-shopping-cart" aria-hidden="true"></i> Buy now!</a>
+              <div class="btn-group pull-right" role="group" aria-label="">
+                <a href="/add/{{ this.id }}" class="btn btn-secondary btn-default" role="button"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Add to cart</a>
+                <a href="" class="btn btn-secondary" role="button" style=""></a>
+                <a href="/buy/{{this.seller}}/{{ this.id }}/{{this.price}}/{{this.count}}" class="btn btn-secondary btn-default" role="button"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Buy now!</a>
+              </div>
             </div>
+
+
         </div>
       </div>
     </div>
