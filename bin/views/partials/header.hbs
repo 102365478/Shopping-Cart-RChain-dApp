@@ -81,11 +81,18 @@
             </a>
 
             <div class="dropdown-menu">
+
                 <input class="dropdown-item" type="text" id="id_text" placeholder="item name">
                 <input class="dropdown-item" type="text" id="price_text" placeholder="item price">
                 <input class="dropdown-item" type="text" id="count_text" placeholder="item count">
                 <button class="dropdown-item" id="upload_btn" >Upload Item</button>
-                    
+                <span class="label label-primary"><label for="file">Upload Picture</label></span>
+                
+                <form action="" method="">
+                    <input type="file" id="file">
+                    <img src="" alt="" id="myimg"/>
+                </form>
+
             </div>
         </div>
     </div>
@@ -165,26 +172,117 @@ const makePost1 = async (route, body) => {
     .then(ret => {return ret.json()});
 }
 
+const makerealPost1 = async (route, body) => {
+    let request = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(body)
+    };
+  
+    return fetch(route, request)
+    .then(ret => {return ret.json()});
+}
+
+
+var url = "";
+var pic = "";
+// "9bec7437-6813-4dc6-a47e-eb5825d715c3"
+// blob:http://localhost:3000/
 
 document.getElementById('upload_btn').addEventListener('click', async function(){
     var name = document.getElementById("id_text").value;
     var price = document.getElementById("price_text").value;
     var count = document.getElementById("count_text").value;
+
     new_dep1(`${name}`).then(
         () => {
             set1(`${name}`, "" + price + "," + count);
         
-            var src = "/newitem/" + name + "/" + price + "/" + count;
+            var src = "/newitem/" + name + "/" + price + "/" + count + "/" + pic;
             console.log(src);
-            makePost1(src, name).then(
-                () => {
-                    //location.reload();
-                }
-            );
+            // makePost1(src, name).then(
+            //     () => {
+            //         //location.reload();
+            //     }
+            // );
+
+            let body = {
+              name: name,
+              price: price,
+              count: count,
+              pic: "" + pic,
+            };
+
+
+            // Actually send it
+            makerealPost1('/newitem', body)
+            .then(res => {
+              console.log(res);
+            });
             
         }
     );
+
+    
+
 });
 
 
+
+
+
+var myimg = document.getElementById('myimg');
+var file = document.getElementById('file');
+file.onchange = function(){
+    var agent = navigator.userAgent;   //检测浏览器版本
+    if (agent.indexOf("MSIE")>=1) {
+      url = file.value;
+    } else if(agent.indexOf("Firefox")>0) {
+      url = window.URL.createObjectURL(file.files.item(0));
+    } else if(agent.indexOf("Chrome")>0) {
+      url = window.URL.createObjectURL(file.files.item(0));
+    }
+    myimg.src = url
+    console.log(url.substring(27, url.length - 1));
+    myimg.style.display = "block";
+
+    var reader = new FileReader();
+    reader.readAsDataURL(file.files.item(0));
+    reader.onload = function(e) {
+                   // console.log(e); //查看对象
+                   // console.log(encodeURIComponent(this.result));//要的数据 这里的this指向FileReader（）对象的实例readers
+                    //pic = encodeURIComponent(this.result);
+                    pic = (this.result);
+    }
+
+}
+
+
 </script>
+
+
+<style>
+
+
+#file{
+    display: none;
+}
+#file + label{
+    display: inline-block;
+    width: 100px;
+    height: 30px;
+    background-color: rgb(90, 152, 222);
+    text-align: center;
+    line-height: 30px;
+    border-radius: 5px;
+}
+img{
+    display: none;
+    width: 200px;
+    height: 200px;
+}
+
+</style>

@@ -1,6 +1,10 @@
 var express = require('express');
+const bodyParser = require('body-parser');
+
 var router = express.Router();
 var app = express();
+app.use(bodyParser.json());
+app.use(express.static(__dirname + '/public'));
 
 const jsdom = require("jsdom");
 const {JSDOM} = jsdom;
@@ -59,7 +63,7 @@ router.get('/add/:id', function(req, res, next) {
   res.redirect('/main/');
 });
 
-router.get('/newitem/:name/:price/:count', function(req, res, next) {
+router.get('/newitem/:name/:price/:count/:url', function(req, res, next) {
 
   var temp1 = localStorage.getItem("username");
   //temp1 = parseInt(temp1);
@@ -72,14 +76,37 @@ router.get('/newitem/:name/:price/:count', function(req, res, next) {
     "price": req.params.price,
     "count": req.params.count,
     "title": req.params.name,
+    "url": req.params.url
   }
 
-  console.log('newitem: ' +  req.params.name + " " + req.params.price + " " + req.params.count);
+  console.log('newitem: ' +  req.params.name + " " + req.params.price + " " + req.params.count + " " + req.params.url);
 
   products.unshift(a);
   
   console.log(products);
 
+});
+
+router.post('/newitem', (req, res) => {
+  var temp1 = localStorage.getItem("username");
+  //temp1 = parseInt(temp1);
+  temp1 = temp1.substring(1, temp1.length - 1);
+
+  var a = {
+    "id": req.body.name,
+    "seller": temp1,
+    "description": req.body.name + " are <span class=\"label label-info\">" + req.body.price + " each</span>",
+    "price": req.body.price,
+    "count": req.body.count,
+    "title": req.body.name,
+    "url": req.body.pic
+  }
+
+  console.log('newitem: ' +  req.body.name + " " + req.body.price + " " + req.body.count + " " + req.body.url);
+
+  products.unshift(a);
+  
+  console.log(products);
 });
 
 router.get('/buy/:sellername/:itemid/:price/:itemcountbef', function(req, res, next) {

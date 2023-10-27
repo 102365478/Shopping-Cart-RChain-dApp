@@ -3,6 +3,12 @@ body {
   font: 20px 'Lato', sans-serif;
 }
 
+.mt-15 {margin-top: 15px;}
+.mb-15 {margin-bottom: 15px;}
+
+.ml-15 {margin-left: 15px;}
+.mr-15 {margin-right: 15px;}
+
 a {
   color: #00B7FF;
 }
