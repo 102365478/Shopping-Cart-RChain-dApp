@@ -11,9 +11,9 @@
 	<strong>This item has been sold out!</strong> Buy failed!
 </div>
 
-
+<div class="row">
 {{# each products }}
-  <div class="row">
+  
     
     <div class="col-md-3 ml-15">
       <div class="thumbnail row">
@@ -27,7 +27,7 @@
               <div class="price pull-left"><i class="fa fa-tag" aria-hidden="true"></i> {{ this.price }}</div>
             </div>
         </div>
-        <img src="{{{this.url}}}" alt="" id="myimg" style="display: block; padding: 0;" class="col-md-5"/>
+        <img src="{{{this.url}}}" alt="" id="myimg" style="display: block; padding: 0; position: relative; top: 30px; right: 28px;" class="col-md-5"/>
         <div class="clearfix">
             <div class="btn-group pull-right" role="group" aria-label="">
                 <a href="/add/{{ this.id }}" class="btn btn-secondary btn-default" role="button"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Add to cart</a>

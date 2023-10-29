@@ -68,18 +68,30 @@
                 <input class="dropdown-item" type="text" id="count_text" placeholder="Item Count" style="padding: 5px; width: 100%;">
             </div>
             <div class="text-center">
-                <button class="dropdown-item" id="upload_btn" style="padding: 8px 16px; width: 60%; background-color: #43BFC7; color: #ffffff; border: none;"><label>Upload Item</label></button>
+                <button type="button" class="btn btn-primary" id="upload_btn" style="padding: 0;  margin: 0; border: 0;"><label style="padding: 6px 12px;padding-bottom:11px;  border: 0; margin: 0;">Upload Item</label></button>
+                <button type="button" class="btn btn-primary" id="upload_btn2" style="padding: 0; margin: 0; border: 0;"><label for="file" style="padding: 6px 12px;padding-bottom:11px;  border: 0; margin :0;">Upload Picture</label ></button>
             </div>
-            &nbsp;
-            <div class="text-center">
-                <button class="dropdown-item" id="upload_btn2" style="padding: 6px 10px; width: 60%; background-color: #43BFC7; color: #ffffff; border: none;"><label for="file">Upload Picture</label ></button>
-            </div>
+            {{!-- <div class="text-center">
+                <label>
+                <button type="button" class="btn btn-primary" id="upload_btn">
+                    Upload Item
+                </button>
+                </label>
+                <label for="file">
+                <button type="button" class="btn btn-primary"id="upload_btn2">
+                    Upload Picture
+                </button>
+                </label>
+            </div> --}}
+            {{!-- &nbsp; --}}
+
             
-                
+            <div class ="text-center" style="padding: 8px; width: 100%;">
             <form action="" method="">
                 <input type="file" id="file">
                 <img src="" alt="" id="myimg"/>
             </form>
+            </div>  
         </div>
 
         </div>
@@ -295,6 +307,10 @@ img{
     display: none;
     width: 200px;
     height: 200px;
+}
+#myimg {
+    display: block;
+    margin: 0 auto;
 }
 
 </style>
