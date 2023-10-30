@@ -250,16 +250,15 @@ document.getElementById('upload_btn').addEventListener('click', async function()
     makerealPost1('/newitem', body)
     .then(res => {
         console.log(res);
-    });
-
-    
-    makePost1('/setproducts', body).then(
         Swal.fire(
             'Success!',
             'Upload success!',
             'success'
         )
-    );
+    });
+
+    
+    
 });
 
 

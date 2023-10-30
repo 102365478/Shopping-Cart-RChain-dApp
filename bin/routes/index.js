@@ -101,11 +101,15 @@ router.post('/newitem', (req, res) => {
     "url": req.body.pic
   }
 
-  console.log('newitem: ' +  req.body.name + " " + req.body.price + " " + req.body.count + " " + req.body.url);
+  console.log('newitem: ' +  req.body.name + " " + req.body.price + " " + req.body.count);
 
   products.unshift(a);
   
   console.log(products);
+
+  setter.setter("products", encodeURI(JSON.stringify(products))).then(
+	(res) => {console.log(res);}
+  );
 });
 
 router.get('/buy/:sellername/:itemid/:price/:itemcountbef', function(req, res, next) {
@@ -213,9 +217,10 @@ router.get('/get/:type/:id', (req, res, next) => {
         setter.getter("products").then(
           (res) => {
             products = JSON.parse(decodeURI(res));
+			console.log(products);
           }
         );
-        res.redirect('/main/');
+        // res.redirect('/main/');
 
       } else if (req.params.type == 2) {
 
@@ -266,11 +271,6 @@ router.get('/setproducts', (req, res, next) => {
 	setter.setter("products", encodeURI(JSON.stringify(products))).then(
 		() => {
 			console.log("set: " + "products" + "\n" + encodeURI(JSON.stringify(products)) +  "\n");
-			setter.getter("products").then(
-				(res) => {
-					console.log(res);
-				}
-			);
 		}
 	);
 });
