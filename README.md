@@ -16,6 +16,18 @@ Using hello-rchain api to interact with rchain blockchain, hello-rchain is the o
 
 To use my dapp you need node.js env, node.js v18.18.0 and Ubuntu 20.04 is my working env.
 
+This project uses CLOUDINARY as the online image hosting platform, so you need to configure the CLOUDINARY environment before deploying the project.
+
+In a terminal, set your `CLOUDINARY_URL` environment variable.
+
+Replace `CLOUDINARY_URL=cloudinary://API_KEY:API_SECRET@CLOUD_NAME` with the API environment variable copied from your product environment credentials:
+
+```bash
+export CLOUDINARY_URL=cloudinary://API_KEY:API_SECRET@CLOUD_NAME
+```
+
+You can find more details on [CLOUDINARY](https://cloudinary.com/documentation/node_quickstart#4_transform_the_image) 
+
 ## Usage
 
 After cloning my dapp, `cd` to the root directory.
