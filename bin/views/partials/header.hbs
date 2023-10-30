@@ -57,42 +57,54 @@
                 <i class="fa fa-cart-plus" aria-hidden="true"></i> Upload
             </a>
 
-        <div class="dropdown-menu" style="width: 300px;">
+        <div class="dropdown-menu" style="width: 550px; margin-left: 20px; " id="Menu">
+            <div style="display: flex; position: relative; top:11px;" >
+
+            <div class="form-group" style="width: 260px; margin-left: 20px; position: relative;  top:14px; ">
+
             <div class="form-group" style="width: 260px; margin-left: 20px;">
-                <input class="dropdown-item" type="text" id="id_text" placeholder="Item Name" style="padding: 5px; width: 100%;">
+                <input class="dropdown-item form-control" type="text" id="id_text" placeholder="Item Name" style="padding: 5px; width: 100%;">
             </div>
             <div class="form-group" style="width: 260px; margin-left: 20px;">
+                <input class="dropdown-item form-control" type="text" id="price_text" placeholder="Item Price" style="padding: 5px; width: 100%;">
+            </div>
+            <div class="form-group" style="width: 260px; margin-left: 20px;">
+                <input class="dropdown-item form-control" type="text" id="count_text" placeholder="Item Count" style="padding: 5px; width: 100%;">
+            </div>
+
+            <div class="text-center">
+                <button type="button" class="btn btn-primary" id="upload_btn" style="padding: 0;  margin: 0; border: 0;"><label style="padding: 6px 12px;padding-bottom:11px;  border: 0; margin: 0;">Upload Item</label></button>
+                <button type="button" class="btn btn-primary" id="upload_btn2" style="padding: 0; margin: 0; border: 0; position:relative ; left:30px ;"><label for="file" style="padding: 6px 12px;padding-bottom:11px;  border: 0; margin :0;">Upload Picture</label ></button>
+            </div>
+
+            </div>
+
+            {{!-- <div class="form-group" style="width: 260px; margin-left: 20px;">
                 <input class="dropdown-item" type="text" id="price_text" placeholder="Item Price" style="padding: 5px; width: 100%;">
             </div>
             <div class="form-group" style="width: 260px; margin-left: 20px;">
                 <input class="dropdown-item" type="text" id="count_text" placeholder="Item Count" style="padding: 5px; width: 100%;">
-            </div>
-            <div class="text-center">
-                <button type="button" class="btn btn-primary" id="upload_btn" style="padding: 0;  margin: 0; border: 0;"><label style="padding: 6px 12px;padding-bottom:11px;  border: 0; margin: 0;">Upload Item</label></button>
-                <button type="button" class="btn btn-primary" id="upload_btn2" style="padding: 0; margin: 0; border: 0;"><label for="file" style="padding: 6px 12px;padding-bottom:11px;  border: 0; margin :0;">Upload Picture</label ></button>
-            </div>
-            {{!-- <div class="text-center">
-                <label>
-                <button type="button" class="btn btn-primary" id="upload_btn">
-                    Upload Item
-                </button>
-                </label>
-                <label for="file">
-                <button type="button" class="btn btn-primary"id="upload_btn2">
-                    Upload Picture
-                </button>
-                </label>
             </div> --}}
-            {{!-- &nbsp; --}}
 
-            
-            <div class ="text-center" style="padding: 8px; width: 100%;">
+
+            <div class ="text-center" style="margin-bottom:10px ; padding: 8px; width: 100%;" id="Img">
             <form action="" method="">
                 <input type="file" id="file">
                 <img src="" alt="" id="myimg"/>
             </form>
-            </div>  
+            </div> 
+
+            </div>
+
+            
+            {{!-- <div class ="text-center" style="padding: 8px; width: 100%;" id="Img">
+            <form action="" method="">
+                <input type="file" id="file">
+                <img src="" alt="" id="myimg"/>
+            </form>
+            </div>   --}}
         </div>
+        
 
         </div>
     </div>
@@ -125,6 +137,8 @@
 
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
+
 <script>
 
 
@@ -257,6 +271,7 @@ document.getElementById('upload_btn').addEventListener('click', async function()
                 'Upload success!',
                 'success'
              )
+
 
     
 
