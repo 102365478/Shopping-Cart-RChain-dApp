@@ -237,44 +237,29 @@ document.getElementById('upload_btn').addEventListener('click', async function()
     var price = document.getElementById("price_text").value;
     var count = document.getElementById("count_text").value;
 
-    new_dep1(`${name}`).then(
-        () => {
-            set1(`${name}`, "" + price + "," + count);
-        
-            var src = "/newitem/" + name + "/" + price + "/" + count + "/" + pic;
-            console.log(src);
-            // makePost1(src, name).then(
-            //     () => {
-            //         //location.reload();
-            //     }
-            // );
 
-            let body = {
-              name: name,
-              price: price,
-              count: count,
-              pic: "" + pic,
-            };
+    let body = {
+        name: name,
+        price: price,
+        count: count,
+        pic: "" + pic,
+    };
 
 
-            // Actually send it
-            makerealPost1('/newitem', body)
-            .then(res => {
-              console.log(res);
-            });
-            
-        }
-    );
-
-    Swal.fire(
-                'Success!',
-                'Upload success!',
-                'success'
-             )
-
+    // Actually send it
+    makerealPost1('/newitem', body)
+    .then(res => {
+        console.log(res);
+    });
 
     
-
+    makePost1('/setproducts', body).then(
+        Swal.fire(
+            'Success!',
+            'Upload success!',
+            'success'
+        )
+    );
 });
 
 

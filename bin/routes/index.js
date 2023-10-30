@@ -25,7 +25,6 @@ const coder = require('../../lib/coder.js');
 const LocalStorage = require('node-localstorage').LocalStorage;
 const localStorage = new LocalStorage('./scratch');
 
-// console.log(parseInt("-50"));
 
 router.get('/', function (req, res, next) {
   res.render('index');
@@ -132,39 +131,46 @@ router.get('/buy/:sellername/:itemid/:price/:itemcountbef', function(req, res, n
           var str = "" + a + "," + (req.params.itemcountbef - 1);
           
 
-          for ( i = 0; i < products.length; ++i ) {
-            // console.log(products[i]);
-            if ( products[i].title == req.params.itemid ) {
-              products[i].count = req.params.itemcountbef - 1;
-              if ( products[i].count == 0 ) {
-                products[i].description = "<span class=\"label label-danger\">Sold Out!</span>";
-              }
-              // console.log(products[i]);
-              break;
-            }
-          }
+			for ( i = 0; i < products.length; ++i ) {
+				// console.log(products[i]);
+				if ( products[i].title == req.params.itemid ) {
+				products[i].count = req.params.itemcountbef - 1;
+				if ( products[i].count == 0 ) {
+					products[i].description = "<span class=\"label label-danger\">Sold Out!</span>";
+				}
+				// console.log(products[i]);
+				break;
+				}
+			}
 
-          setter.setter(req.params.itemid, str).then(
-            (ret) => {
-              // res.end("\"" + "set: " + req.params.id + " " + req.params.value + "\n" + "\"");
-              console.log("set: " + req.params.itemid + " " + str + "\n");
-              var c = money - a;
+			setter.setter("products", encodeURI(JSON.stringify(products))).then(
+				() => {
+					console.log("set: " + "products" + "\n" + encodeURI(JSON.stringify(products)) +  "\n");
+					  setter.getter("products").then(
+						(res) => {
+							console.log(res);
+						}
+					);
 
-              var temp1 = localStorage.getItem("username");
 
-              temp1 = temp1.substring(1, temp1.length - 1);
+					var c = money - a;
 
-              setter.setter(temp1, c).then(
-                (ret) => {
-                  // res.end("\"" + "set: " + req.params.id + " " + req.params.value + "\n" + "\"");
-                  console.log("set: " + temp1 + " " + money + "-" + a + " " + c + "\n");
-                  money = money - a;
-                  localStorage.setItem("money", JSON.stringify(money));
-                  res.redirect('/main/');
-                }
-              );
-            }
-          );
+					var temp1 = localStorage.getItem("username");
+	  
+					temp1 = temp1.substring(1, temp1.length - 1);
+	  
+					setter.setter(temp1, c).then(
+						(ret) => {
+							// res.end("\"" + "set: " + req.params.id + " " + req.params.value + "\n" + "\"");
+							console.log("set: " + temp1 + " " + money + "-" + a + " " + c + "\n");
+							money = money - a;
+							localStorage.setItem("money", JSON.stringify(money));
+							res.redirect('/main/');
+						}
+					);
+				}
+			);
+
 
         }
       );
@@ -204,8 +210,13 @@ router.get('/get/:type/:id', (req, res, next) => {
       if (req.params.type == 1) {
         localStorage.setItem("username", JSON.stringify(req.params.id));
         localStorage.setItem("money", JSON.stringify(ret));
+        setter.getter("products").then(
+          (res) => {
+            products = JSON.parse(decodeURI(res));
+          }
+        );
         res.redirect('/main/');
-  
+
       } else if (req.params.type == 2) {
 
       } else if (req.params.type == 3) {
@@ -231,6 +242,44 @@ router.get('/new/:id', (req, res, next) => {
   setter.new_deploy(req.params.id);
   console.log("new_deploy: " + req.params.id + "\n");
 });
+
+router.get('/init', (req, res, next) => {
+  setter.new_deploy("products").then(
+    () => {
+      console.log("new_deploy: " + "products" + "\n");
+  
+      setter.setter("products", encodeURI(JSON.stringify(products))).then(
+        () => {
+          console.log("set: " + "products" + "\n" + encodeURI(JSON.stringify(products)) +  "\n");
+          setter.getter("products").then(
+            (res) => {
+              	console.log(res);
+            }
+          );
+        }
+      );
+    }
+  );
+});
+
+router.get('/setproducts', (req, res, next) => {
+	setter.setter("products", encodeURI(JSON.stringify(products))).then(
+		() => {
+			console.log("set: " + "products" + "\n" + encodeURI(JSON.stringify(products)) +  "\n");
+			setter.getter("products").then(
+				(res) => {
+					console.log(res);
+				}
+			);
+		}
+	);
+});
+
+
+
+
+
+
 
 module.exports = router;
 
