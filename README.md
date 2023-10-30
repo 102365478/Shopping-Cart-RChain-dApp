@@ -34,16 +34,16 @@ After cloning my dapp, `cd` to the root directory.
 
 1.Starting rchain server
 
-    ```bash
-    npm run rnode
-    ```
+```bash
+npm run rnode
+```
 
 2.In another terminal, run the following command for all virtual machines to start nodejs server:
 
-    ```bash
-    cd bin
-    npm run start
-    ``` 
+```bash
+cd bin
+npm run start
+``` 
     
 3.open your browse `localhost:3000` to use our dapp
 
