@@ -135,6 +135,8 @@
 
 </div>
 
+
+
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
@@ -276,9 +278,10 @@ file.onchange = function(){
     } else if(agent.indexOf("Chrome")>0) {
       url = window.URL.createObjectURL(file.files.item(0));
     }
+
     myimg.src = url
-    console.log(url.substring(27, url.length - 1));
     myimg.style.display = "block";
+
 
     var reader = new FileReader();
     reader.readAsDataURL(file.files.item(0));

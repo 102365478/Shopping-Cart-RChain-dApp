@@ -13,6 +13,13 @@ window = dom.window;
 document = window.document;
 XMLHttpRequest = window.XMLHttpRequest;
 
+const cloudinary = require('cloudinary').v2;
+
+// Return "https" URLs by setting secure: true
+cloudinary.config({
+  secure: true
+});
+
 var fs = require('fs');
 
 var Cart = require('../models/cart');
@@ -24,6 +31,42 @@ const coder = require('../../lib/coder.js');
 
 const LocalStorage = require('node-localstorage').LocalStorage;
 const localStorage = new LocalStorage('./scratch');
+
+const uploadImage = async (imagePath) => {
+
+    // Use the uploaded file's name as the asset's public ID and 
+    // allow overwriting the asset with new versions
+    const options = {
+		use_filename: true,
+		unique_filename: false,
+		overwrite: true,
+    };
+
+    try {
+		// Upload the image
+		const result = await cloudinary.uploader.upload(imagePath, options);
+		return result.url;
+    } catch (error) {
+      	console.error(error);
+    }
+};
+
+const getAssetInfo = async (publicId) => {
+
+    // Return colors in the response
+    const options = {
+      colors: true,
+    };
+
+    try {
+        // Get details about the asset
+        const result = await cloudinary.api.resource(publicId, options);
+        console.log(result);
+        return result.colors;
+        } catch (error) {
+        console.error(error);
+    }
+};
 
 
 router.get('/', function (req, res, next) {
@@ -91,25 +134,36 @@ router.post('/newitem', (req, res) => {
   //temp1 = parseInt(temp1);
   temp1 = temp1.substring(1, temp1.length - 1);
 
-  var a = {
-    "id": req.body.name,
-    "seller": temp1,
-    "description": req.body.name + " are <span class=\"label label-info\">" + req.body.price + " each</span>",
-    "price": req.body.price,
-    "count": req.body.count,
-    "title": req.body.name,
-    "url": req.body.pic
-  }
+  var temppic;
 
-  console.log('newitem: ' +  req.body.name + " " + req.body.price + " " + req.body.count);
+  uploadImage(req.body.pic).then(
+		(ret) => {
+			temppic = ret;
+  			console.log(temppic);
 
-  products.unshift(a);
-  
-  console.log(products);
+			  var a = {
+				"id": req.body.name,
+				"seller": temp1,
+				"description": req.body.name + " are <span class=\"label label-info\">" + req.body.price + " each</span>",
+				"price": req.body.price,
+				"count": req.body.count,
+				"title": req.body.name,
+				"url": temppic
+			  }
+			
+			  console.log('newitem: ' +  req.body.name + " " + req.body.price + " " + req.body.count);
+			
+			  products.unshift(a);
+			  
+			  console.log(products);
+			
+			  setter.setter("products", encodeURI(JSON.stringify(products)));
 
-  setter.setter("products", encodeURI(JSON.stringify(products))).then(
-	(res) => {console.log(res);}
+		}
   );
+
+
+
 });
 
 router.get('/buy/:sellername/:itemid/:price/:itemcountbef', function(req, res, next) {
