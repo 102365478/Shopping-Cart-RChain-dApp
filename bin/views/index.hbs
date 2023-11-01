@@ -38,108 +38,11 @@
             </div>
         </div>
     </div>
+    
+    <script type="module" src="/indexScript.js"></script>
 </body>
 
 
-<script>
-
-
-const container = document.querySelector('#container');
-const signInButton = document.querySelector('#signIn');
-const signUpButton = document.querySelector('#signUp');
-signUpButton.addEventListener('click', () => container.classList.add
-('right-panel-active'));
-signInButton.addEventListener('click', async function(){
-    container.classList.remove('right-panel-active');
-});
-
-
-const new_dep = async (name) => {
-    let body = {
-      name: name,
-    };
-  
-    console.log('/new/' + name);
-
-    // Actually send it
-    makePost('/new/' + name, body)
-    .then(ret => {
-      console.log(ret);
-    }); 
-}
-  
-const get = async (name) => {
-    let body = {
-      name: name,
-    };
-
-    var src = "/get/1/" + name;
-
-    console.log(src);
-
-  
-    // Actually send it
-    makePost(src, body)
-    .then((ret) => {
-      localStorage.setItem("username", JSON.stringify(name));
-      localStorage.setItem("money", JSON.stringify(ret));
-      return ret;
-    });
-}
-  
-const set = async (name, value) => {
-    let body = {
-      name: name,
-      value: value,
-    };
-
-    console.log(value)
-
-    var src = "/set/" + name + "/" + value;
-  
-    console.log(src);
-
-    makePost(src, body)
-    .then(ret => {
-      console.log(ret);
-    });
-  
-}
-  
-const makePost = async (route, body) => {
-    let request = {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-type': 'application/json',
-      }
-    };
-  
-    return fetch(route, request)
-    .then(ret => {return ret.json()});
-}
-
-document.getElementById('login_btn').addEventListener('click', async function(){
-    username = document.getElementById('login_text').value;
-
-    get(`${username}`);
-});
-
-document.getElementById('reg_btn').addEventListener('click', async function(){
-    username = document.getElementById("reg_text").value;
-
-    new_dep(`${username}`).then(
-        () => {
-            set(`${username}`, 100);
-        }
-    );
-});
-
-
-
-
-
-</script>
 
 <style>
 .row {
