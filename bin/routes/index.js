@@ -73,7 +73,7 @@ router.get('/', function (req, res, next) {
   res.render('index');
 });
 
-router.get('/main/', async function (req, res, next) {
+router.get('/main/',  function (req, res, next) {
     var temp = localStorage.getItem("money");
     var tem = JSON.parse(temp);
     var temp1 = localStorage.getItem("username");

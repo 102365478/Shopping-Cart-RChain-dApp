@@ -34,7 +34,7 @@ function processFunc(ret,process,arg2) {
     }
 }
 
-function makePost(route, body) {
+export function makePost(route, body) {
     if(body==null){
       console.log('Body is null.');
     }
