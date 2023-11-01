@@ -146,6 +146,9 @@
 
 
 
+
+
+
 const new_dep1 = async (name) => {
     let body = {
       name: name,
@@ -223,10 +226,16 @@ const makerealPost1 = async (route, body) => {
       },
       body: JSON.stringify(body)
     };
-  
-    return fetch(route, request)
-    .then(ret => {return ret.json()});
+
+    /*fetch(route, request)
+    .then(ret => {
+        console.log("999");
+        return ret.json()});*/
+
+    await fetch(route, request);
+
 }
+
 
 
 var url = "";
@@ -247,21 +256,16 @@ document.getElementById('upload_btn').addEventListener('click', async function()
         pic: "" + pic,
     };
 
-
     // Actually send it
-    makerealPost1('/newitem', body)
-    .then(res => {
-        console.log(res);
-        Swal.fire(
+    await makerealPost1('/newitem', body);
+
+    Swal.fire(
             'Success!',
             'Upload success!',
             'success'
-        )
-    });
-
-    
-    
+    );
 });
+
 
 
 
