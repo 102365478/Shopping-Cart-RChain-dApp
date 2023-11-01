@@ -105,66 +105,44 @@ router.get('/add/:id', function(req, res, next) {
   res.redirect('/main/');
 });
 
-router.get('/newitem/:name/:price/:count/:url', function(req, res, next) {
 
-  var temp1 = localStorage.getItem("username");
-  //temp1 = parseInt(temp1);
-  temp1 = temp1.substring(1, temp1.length - 1);
-
-  var a = {
-    "id": req.params.name,
-    "seller": temp1,
-    "description": req.params.name + " are <span class=\"label label-info\">" + req.params.price + " each</span>",
-    "price": req.params.price,
-    "count": req.params.count,
-    "title": req.params.name,
-    "url": req.params.url
-  }
-
-  console.log('newitem: ' +  req.params.name + " " + req.params.price + " " + req.params.count + " " + req.params.url);
-
-  products.unshift(a);
-  
-  console.log(products);
-
-});
-
-router.post('/newitem', (req, res) => {
+router.post('/newitem', async function (req, res) {
   var temp1 = localStorage.getItem("username");
   //temp1 = parseInt(temp1);
   temp1 = temp1.substring(1, temp1.length - 1);
 
   var temppic;
 
-  uploadImage(req.body.pic).then(
-		(ret) => {
-			temppic = ret;
-  			console.log(temppic);
-
-			  var a = {
-				"id": req.body.name,
-				"seller": temp1,
-				"description": req.body.name + " are <span class=\"label label-info\">" + req.body.price + " each</span>",
-				"price": req.body.price,
-				"count": req.body.count,
-				"title": req.body.name,
-				"url": temppic
-			  }
-			
-			  console.log('newitem: ' +  req.body.name + " " + req.body.price + " " + req.body.count);
-			
-			  products.unshift(a);
-			  
-			  console.log(products);
-			
-			  setter.setter("products", encodeURI(JSON.stringify(products)));
-
-		}
+  await uploadImage(req.body.pic).then(
+    (ret) => {
+      temppic = ret;
+    }
   );
 
+  console.log(temppic);
 
+  var a = {
+  "id": req.body.name,
+  "seller": temp1,
+  "description": req.body.name + " are <span class=\"label label-info\">" + req.body.price + " each</span>",
+  "price": req.body.price,
+  "count": req.body.count,
+  "title": req.body.name,
+  "url": temppic
+  }
+
+  console.log('newitem: ' +  req.body.name + " " + req.body.price + " " + req.body.count);
+
+  products.unshift(a);
+  
+  console.log(products);
+
+  await setter.setter("products", encodeURI(JSON.stringify(products)));
+
+  res.end();
 
 });
+
 
 router.get('/buy/:sellername/:itemid/:price/:itemcountbef', function(req, res, next) {
   var temp = localStorage.getItem("money");
