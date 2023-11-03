@@ -25,12 +25,13 @@ var fs = require('fs');
 var Cart = require('../models/cart');
 var products = JSON.parse(fs.readFileSync('./data/products.json', 'utf8'));
 
-const rho_deploy = require('../../lib/rho_deploy.js');
 const setter = require("../../lib/setter.js");
-const coder = require('../../lib/coder.js');
 
 const LocalStorage = require('node-localstorage').LocalStorage;
 const localStorage = new LocalStorage('./scratch');
+
+const Coupon = require('../public/Coupons/Service.js');
+
 
 const uploadImage = async (imagePath) => {
 
@@ -144,10 +145,16 @@ router.post('/newitem', async function (req, res) {
 });
 
 
-router.get('/buy/:sellername/:itemid/:price/:itemcountbef', function(req, res, next) {
+router.get('/buy/:sellername/:itemid/:price/:itemcountbef/:couponId', function(req, res, next) {
   var temp = localStorage.getItem("money");
   var money  = JSON.parse(temp);
   var a = JSON.parse(req.params.price);
+
+  let quantity = 1;
+  let sellingPrice = a;
+  let couponId = req.params.couponId;
+
+  a = Coupon.couponService.calculate(quantity, sellingPrice, couponId);
 
   if ( req.params.itemcountbef <= 0 ) {
     // document.getElementById("soldout").style.display = "none";
