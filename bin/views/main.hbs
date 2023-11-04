@@ -17,6 +17,11 @@
 	<strong id="successinfo">You get a {{coupuns}} coupun!</strong>
 </div>
 
+<div class="alert alert-danger fade in" style="display: none;" id="buyfail" style="display: none;">
+	<button type="button" class="close" data-dismiss="alert" >&times;</button>
+	<strong>This item hve been sold out!</strong>Buy failed!
+</div>
+
 <div class="row">
 {{# each products }}
   
@@ -38,7 +43,13 @@
             <div class="btn-group pull-right" role="group" aria-label="">
                 <a href="/add/{{ this.id }}" class="btn btn-secondary btn-default" role="button"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Add to cart</a>
                 {{!-- <a href="" class="btn btn-secondary" role="button" style=""></a> --}}
-                <a href="/buy/{{this.seller}}/{{ this.id }}/{{this.price}}/{{this.count}}/2" class="btn btn-secondary btn-default" role="button"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Buy now!</a>
+                <a href="/buy/{{this.seller}}/{{ this.id }}/{{this.price}}/{{this.count}}/{{coupuns}}" class="btn btn-secondary btn-default" role="button" onclick="
+                  console.log("123");
+                  if({{this.count}} <= 0) {
+                    console.log("123");
+                    document.getElementById("buyfail").style.display = "block";
+                  }
+                "><i class="fa fa-shopping-cart" aria-hidden="true"></i> Buy now!</a>
             </div>
         </div>
       </div>

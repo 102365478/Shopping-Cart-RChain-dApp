@@ -153,7 +153,7 @@ router.get('/buy/:sellername/:itemid/:price/:itemcountbef/:couponId', async (req
     bar1.update(500, {name: "buy", workingname: "less than 0"});
     bar1.stop();
     
-    return;
+    res.redirect('/main/');
   }
 
   var s;

@@ -5,7 +5,7 @@
     "seller": "lxt",
     "description": "Apples are <span class=\"label label-info\">25 each</span>",
     "price": 25,
-    "count": 1,
+    "count": 0,
     "url": ""
   }
 ]
