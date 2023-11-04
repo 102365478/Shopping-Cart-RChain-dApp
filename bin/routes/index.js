@@ -1,5 +1,7 @@
 var express = require('express');
 const bodyParser = require('body-parser');
+const cliProgress = require('cli-progress');
+const bar1 = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
 
 var router = express.Router();
 var app = express();
@@ -33,6 +35,9 @@ const localStorage = new LocalStorage('./scratch');
 const Coupon = require('../public/Coupons/Service.js');
 
 
+
+
+
 const uploadImage = async (imagePath) => {
 
     // Use the uploaded file's name as the asset's public ID and 
@@ -45,27 +50,10 @@ const uploadImage = async (imagePath) => {
 
     try {
 		// Upload the image
-		const result = await cloudinary.uploader.upload(imagePath, options);
-		return result.url;
+      var result = await cloudinary.uploader.upload(imagePath, options);
+      return result.url;
     } catch (error) {
-      	console.error(error);
-    }
-};
-
-const getAssetInfo = async (publicId) => {
-
-    // Return colors in the response
-    const options = {
-      colors: true,
-    };
-
-    try {
-        // Get details about the asset
-        const result = await cloudinary.api.resource(publicId, options);
-        console.log(result);
-        return result.colors;
-        } catch (error) {
-        console.error(error);
+      console.error(error);
     }
 };
 
@@ -108,6 +96,11 @@ router.get('/add/:id', function(req, res, next) {
 
 
 router.post('/newitem', async function (req, res) {
+  bar1.start(300, 0);
+
+  bar1.update(100);
+  console.log();
+
   var temp1 = localStorage.getItem("username");
   //temp1 = parseInt(temp1);
   temp1 = temp1.substring(1, temp1.length - 1);
@@ -120,7 +113,8 @@ router.post('/newitem', async function (req, res) {
     }
   );
 
-  console.log(temppic);
+  bar1.update(200);
+  console.log();
 
   var a = {
   "id": req.body.name,
@@ -132,20 +126,24 @@ router.post('/newitem', async function (req, res) {
   "url": temppic
   }
 
-  console.log('newitem: ' +  req.body.name + " " + req.body.price + " " + req.body.count);
-
   products.unshift(a);
   
-  console.log(products);
-
   await setter.setter("products", encodeURI(JSON.stringify(products)));
+  
+  bar1.update(300);
+  console.log();
+
+  bar1.stop();
 
   res.end();
 
 });
 
 
-router.get('/buy/:sellername/:itemid/:price/:itemcountbef/:couponId', function(req, res, next) {
+router.get('/buy/:sellername/:itemid/:price/:itemcountbef/:couponId', async (req, res, next) => {
+  bar1.start(500, 0);
+  console.log();
+
   var temp = localStorage.getItem("money");
   var money  = JSON.parse(temp);
   var a = JSON.parse(req.params.price);
@@ -158,67 +156,82 @@ router.get('/buy/:sellername/:itemid/:price/:itemcountbef/:couponId', function(r
 
   if ( req.params.itemcountbef <= 0 ) {
     // document.getElementById("soldout").style.display = "none";
+    bar1.update(500);
+    bar1.stop();
+    console.log();
     return;
   }
+
+  var s;
+  var b;
   
-  setter.getter(req.params.sellername).then(
+  await setter.getter(req.params.sellername).then(
     (ret) => {
-      // console.log("getB" + ret);
-      if (ret == "NaN" || ret == "null") { ret = 0; }
-      var s = parseInt(ret);
-      var b = parseInt(ret) + a;
-      setter.setter(req.params.sellername, b).then(
-        (ret) => {
-          // res.end("\"" + "set: " + req.params.id + " " + req.params.value + "\n" + "\"");
-          console.log("set: " + req.params.sellername + " " + JSON.parse(s) + " + " + a + " " + b + "\n");
-          var str = "" + a + "," + (req.params.itemcountbef - 1);
-          
+      bar1.update(100);
+      console.log();
 
-			for ( i = 0; i < products.length; ++i ) {
-				// console.log(products[i]);
-				if ( products[i].title == req.params.itemid ) {
-				products[i].count = req.params.itemcountbef - 1;
-				if ( products[i].count == 0 ) {
-					products[i].description = "<span class=\"label label-danger\">Sold Out!</span>";
-				}
-				// console.log(products[i]);
-				break;
-				}
-			}
-
-			setter.setter("products", encodeURI(JSON.stringify(products))).then(
-				() => {
-					console.log("set: " + "products" + "\n" + encodeURI(JSON.stringify(products)) +  "\n");
-					  setter.getter("products").then(
-						(res) => {
-							console.log(res);
-						}
-					);
-
-
-					var c = money - a;
-
-					var temp1 = localStorage.getItem("username");
-	  
-					temp1 = temp1.substring(1, temp1.length - 1);
-	  
-					setter.setter(temp1, c).then(
-						(ret) => {
-							// res.end("\"" + "set: " + req.params.id + " " + req.params.value + "\n" + "\"");
-							console.log("set: " + temp1 + " " + money + "-" + a + " " + c + "\n");
-							money = money - a;
-							localStorage.setItem("money", JSON.stringify(money));
-							res.redirect('/main/');
-						}
-					);
-				}
-			);
-
-
-        }
-      );
+      if (ret == "NaN" || ret == "null" || ret == NaN || ret == null) { ret = 0; }
+      
+      s = parseInt(ret);
+      b = parseInt(ret) + a;
     }
   );  
+
+  await setter.setter(req.params.sellername, b).then(
+    (ret) => {
+      bar1.update(200);
+      console.log();
+
+      for ( i = 0; i < products.length; ++i ) {
+
+        if ( products[i].title == req.params.itemid ) {
+          products[i].count = req.params.itemcountbef - 1;
+
+          if ( products[i].count == 0 ) {
+            products[i].description = "<span class=\"label label-danger\">Sold Out!</span>";
+          }
+
+          break;
+        }
+      }
+    }
+  );
+
+  var temp1 = localStorage.getItem("username");
+  var c = money - a;
+
+
+  await setter.setter("products", encodeURI(JSON.stringify(products))).then(
+    () => {
+      bar1.update(300);
+      console.log();
+        
+      temp1 = temp1.substring(1, temp1.length - 1);
+    }
+  );
+
+  await setter.getter("products").then(
+    (res) => {
+      bar1.update(400);
+      console.log();
+    }
+  );
+
+  await setter.setter(temp1, c).then(
+    (ret) => {
+      bar1.update(500);
+      console.log();
+      bar1.stop();
+      
+      money = money - a;
+      localStorage.setItem("money", JSON.stringify(money));
+      res.redirect('/main/');
+    }
+  );
+
+
+
+
 });
 
 router.get('/cart', function(req, res, next) {
