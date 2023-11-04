@@ -1,4 +1,6 @@
 // initialize body
+// flag = 1 : only initialize name
+// flag = 2 : initialize name and value 
 export function initBody(flag, name, value) {
   let body;
   if(flag==1){
@@ -26,4 +28,3 @@ export function getUserName(username) {
     }
     return null;
 }
-

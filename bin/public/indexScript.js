@@ -1,6 +1,6 @@
-import { initBody } from './strategy.js';
+import { initBody} from './strategy.js';
 import { getUserName } from './strategy.js';
-import { makePost, processPost } from './postTemplate.js';
+import { processPost } from './postTemplate.js';
 
 const container = document.querySelector('#container');
 const signInButton = document.querySelector('#signIn');
@@ -13,7 +13,6 @@ signInButton.addEventListener('click', async function(){
 
 const new_dep = async (name) => {
    let body = initBody(1,name);
-
    var newName = '/new/' + name;
    console.log(newName);
 
@@ -44,8 +43,7 @@ let username;
 document.getElementById('login_btn').addEventListener('click', async function(){
     username = getUserName("login_text");
     let body = initBody(1,null);
-    get(`${username}`);
-    //skip
+    await get(`${username}`);
 });
 
 document.getElementById('reg_btn').addEventListener('click', async function(){
