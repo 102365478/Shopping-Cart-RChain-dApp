@@ -1,6 +1,6 @@
 
 
-// do makePost() and process the returned value
+// do makePost() and process the returned valuez
 export function processPost(arg1,arg2,body,process) {
     // arg1 : the first argument of makePost()
     // arg2 ... : the additional arguments that will be processed
