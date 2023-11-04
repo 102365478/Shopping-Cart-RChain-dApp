@@ -1,3 +1,5 @@
+
+
 // do makePost() and process the returned value
 export function processPost(arg1,arg2,body,process) {
     // arg1 : the first argument of makePost()
@@ -6,13 +8,13 @@ export function processPost(arg1,arg2,body,process) {
     // process : the way of processing the returned value
     makePost(arg1,body).then(
         ret => {
-            processFunc(ret,process,arg2);
+            processRet(ret,process,arg2);
         }
     )
 }
 
 // processing the returned value according to the 'process'
-function processFunc(ret,process,arg2) {
+function processRet(ret,process,arg2) {
 
     if(ret == null){
         console.log('[processFunc] Ret is null.');
@@ -34,7 +36,7 @@ function processFunc(ret,process,arg2) {
     }
 }
 
-export function makePost(route, body) {
+function makePost(route, body) {
     if(body==null){
       console.log('Body is null.');
     }
@@ -46,9 +48,13 @@ export function makePost(route, body) {
         'Content-type': 'application/json',
       }
     };
-  
+
+    console.log("makepost() before return");
+
+
     return fetch(route, request)
       .then(ret => {
-        return ret.json();
+        console.log("makepost() in return then");
+        //return ret.json();
       });
   }

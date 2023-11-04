@@ -62,15 +62,14 @@ router.get('/', function (req, res, next) {
   res.render('index');
 });
 
-router.get('/main/',  function (req, res, next) {
+router.get('/main/', async function (req, res, next) {
     var temp = localStorage.getItem("money");
     var tem = JSON.parse(temp);
     var temp1 = localStorage.getItem("username");
     temp1 = temp1.substring(1, temp1.length - 1);
-
+    console.log("this function 1");
 
     // console.log("hi " + temp1 + " " + tem);
-
 
     res.render('main', 
       { 
@@ -81,6 +80,10 @@ router.get('/main/',  function (req, res, next) {
       }
     );
 
+    
+    console.log("this function 2");
+    
+    
 });
 
 router.get('/add/:id', function(req, res, next) {
@@ -257,7 +260,7 @@ router.get('/remove/:id', function(req, res, next) {
   res.redirect('/cart');
 });
 
-router.get('/get/:type/:id', (req, res, next) => {
+router.get('/get/:type/:id', function(req, res1, next) {
   setter.getter(req.params.id).then(
     (ret) => {
       // res.end("\"" + "get: " + req.params.id + " " + ret + "\n" + "\"");
@@ -269,10 +272,30 @@ router.get('/get/:type/:id', (req, res, next) => {
         setter.getter("products").then(
           (res) => {
             products = JSON.parse(decodeURI(res));
-			console.log(products);
+			      console.log(products);
+
+            var temp = localStorage.getItem("money");
+            var tem = JSON.parse(temp);
+            var temp1 = localStorage.getItem("username");
+            temp1 = temp1.substring(1, temp1.length - 1);
+            console.log("this function 1");
+    
+            // console.log("hi " + temp1 + " " + tem);
+    
+            res1.render('main', 
+              { 
+              title: 'NodeJS Shopping Cart',
+              products: products,
+              username: temp1,
+              money: tem,
+              }
+            );
+
+
           }
         );
         // res.redirect('/main/');
+        
 
       } else if (req.params.type == 2) {
 
