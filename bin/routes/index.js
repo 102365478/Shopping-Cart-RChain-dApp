@@ -1,7 +1,5 @@
 var express = require('express');
 const bodyParser = require('body-parser');
-const cliProgress = require('cli-progress');
-
 
 var router = express.Router();
 var app = express();
@@ -15,6 +13,7 @@ window = dom.window;
 document = window.document;
 XMLHttpRequest = window.XMLHttpRequest;
 
+const cliProgress = require('cli-progress');
 const cloudinary = require('cloudinary').v2;
 
 // Return "https" URLs by setting secure: true
@@ -33,9 +32,6 @@ const LocalStorage = require('node-localstorage').LocalStorage;
 const localStorage = new LocalStorage('./scratch');
 
 const Coupon = require('../public/Coupons/Service.js');
-
-
-
 
 
 const uploadImage = async (imagePath) => {
@@ -57,7 +53,6 @@ const uploadImage = async (imagePath) => {
     }
 };
 
-
 router.get('/', function (req, res, next) {
   res.render('index');
 });
@@ -74,6 +69,7 @@ router.get('/main/', async function (req, res, next) {
       products: products,
       username: temp1,
       money: tem,
+      coupuns: Math.round(Math.random() * 2),
       }
     );
 

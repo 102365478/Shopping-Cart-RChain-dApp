@@ -9,6 +9,11 @@ class DiscountCoupon extends Context.AbstractCouponCalculator {
     calculate(params, couponConfig) {
         let totalPrice = this.calculateTotalPrice(params); //折扣之前要付的价钱
 
+        if (couponConfig.thresholdPrice != null && totalPrice < couponConfig.thresholdPrice) {
+            //thresholdPrice是满减要达到的价钱
+            return totalPrice;
+        }
+
         let discount = (1000 - couponConfig.discount) / 1000; //打了多少折扣
         let difference = totalPrice - totalPrice * discount; //优惠了多少钱
 

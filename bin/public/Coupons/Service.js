@@ -8,7 +8,8 @@ const DiscountCoupon = require('./DiscountCoupon.js');
 class CouponRepository {
     constructor() {
         this.coupons = {
-            '1': {type: 'DiscountCoupon', config: '{"discount": 100, "maxReductionAmount": 10}'},
+            '0': {type: 'DiscountCoupon', config: '{"discount": 0, "maxReductionAmount": 0}'},
+            '1': {type: 'DiscountCoupon', config: '{"discount": 100}'},
             '2': {type: 'DiscountToCoupon', config: '{"DiscountTo": 10}'},
             // 其他优惠券...
         };

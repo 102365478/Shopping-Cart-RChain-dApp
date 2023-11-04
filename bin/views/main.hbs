@@ -6,9 +6,15 @@
 {{!-- <h1>{{title}}</h1> --}}
 <h1>Hi! {{username}}, your money: {{money}} <a href="/get/1/{{username}}" class="btn btn-info btn-xs" role="button">Refresh</a></h1>
 
-<div id="soldout" class="alert alert-danger fade in" style="display: none;">
+<div id="soldout" class="alert alert-info fade in" >
 	<button type="button" class="close" data-dismiss="alert">&times;</button>
-	<strong>This item has been sold out!</strong> Buy failed!
+	<strong>Click to get free coupuns!</strong>
+	<button type="button" class="btn btn-success btn-defualt" data-dismiss="alert" id="Get_Coupuns">Get Coupuns</button>
+</div>
+
+<div class="alert alert-success fade in" style="display: none;" id="getsuccess">
+	<button type="button" class="close" data-dismiss="alert" >&times;</button>
+	<strong id="successinfo">You get a {{coupuns}} coupun!</strong>
 </div>
 
 <div class="row">
@@ -42,6 +48,22 @@
 
 
 <script>
+  var info = document.getElementById("successinfo");
+  switch({{{coupuns}}}) {
+    case 0: {
+      document.getElementById("getsuccess").classList.remove("alert-success");
+      document.getElementById("getsuccess").classList.add("alert-warning");
+      info.textContent = "You get nothing"; 
+      break;
+    }
+    case 1: {info.textContent = "You get a 10% off discount coupun!"; break;}
+    case 2: {info.textContent = "You get a discount to 10 coupun!"; break;}
+  }
 
+
+  var get = document.getElementById("Get_Coupuns");
+  get.addEventListener('click', function() {
+    document.getElementById("getsuccess").style.display = 'block';
+  })
 
 </script>
