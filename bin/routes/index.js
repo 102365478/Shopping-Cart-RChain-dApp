@@ -91,9 +91,9 @@ router.get('/add/:id', function(req, res, next) {
 });
 
 router.post('/newitem', async function (req, res) {
-  var bar1 = new cliProgress.SingleBar({format: '{name}: [{bar}] {percentage}% | {workingname} | ETA: {eta}s |\n'}
+  var bar1 = new cliProgress.SingleBar({format: '{name}: [{bar}] {percentage}% | ETA: {eta}s | {workingname} |\n {src}\n'}
   , cliProgress.Presets.shades_classic);
-  bar1.start(200, 0, {name: "newitem", workingname: "newitem"});
+  bar1.start(200, 0, {name: "newitem", workingname: "newitem", src: ""});
   
 
   var temp1 = localStorage.getItem("username");
@@ -105,10 +105,10 @@ router.post('/newitem', async function (req, res) {
   await uploadImage(req.body.pic).then(
     (ret) => {
       temppic = ret;
+      bar1.update(100, {name: "newitem", workingname: "uploadImage", src: ret});
     }
   );
 
-  bar1.update(100, {name: "newitem", workingname: "uploadImage"});
   
 
   var a = {
@@ -123,9 +123,12 @@ router.post('/newitem', async function (req, res) {
 
   products.unshift(a);
   
-  await setter.setter("products", encodeURI(JSON.stringify(products)));
+  await setter.setter("products", encodeURI(JSON.stringify(products))).then(
+    ret => {
+      bar1.update(200, {name: "newitem", workingname: "setproducts", src : ret.src});
+    }
+  );
   
-  bar1.update(200, {name: "newitem", workingname: "setproducts"});
   
 
   bar1.stop();
@@ -135,9 +138,9 @@ router.post('/newitem', async function (req, res) {
 });
 
 router.get('/buy/:sellername/:itemid/:price/:itemcountbef/:couponId', async (req, res, next) => {
-  var bar1 = new cliProgress.SingleBar({format: '{name}: [{bar}] {percentage}% | {workingname} | ETA: {eta}s |\n'}
+  var bar1 = new cliProgress.SingleBar({format: '{name}: [{bar}] {percentage}% | ETA: {eta}s | {workingname} |\n {src}\n'}
   , cliProgress.Presets.shades_classic);
-  bar1.start(500, 0, {name: "buy", workingname: "buy"});
+  bar1.start(500, 0, {name: "buy", workingname: "buy", src: ""});
 
   var temp = localStorage.getItem("money");
   var money  = JSON.parse(temp);
@@ -162,19 +165,18 @@ router.get('/buy/:sellername/:itemid/:price/:itemcountbef/:couponId', async (req
   
   await setter.getter(req.params.sellername).then(
     (ret) => {
-      bar1.update(100, {name: "buy", workingname: "get seller money"});
+      bar1.update(100, {name: "buy", workingname: "get seller money", src : ret.src});
       
-
-      if (ret == "NaN" || ret == "null" || ret == NaN || ret == null) { ret = 0; }
+      if (ret.ret == "NaN" || ret.ret == "null" || ret.ret == NaN || ret.ret == null) { ret.ret = 0; }
       
-      s = parseInt(ret);
-      b = parseInt(ret) + a;
+      s = parseInt(ret.ret);
+      b = parseInt(ret.ret) + a;
     }
   );  
 
   await setter.setter(req.params.sellername, b).then(
     (ret) => {
-      bar1.update(200, {name: "buy", workingname: "set seller money"});
+      bar1.update(200, {name: "buy", workingname: "set seller money", src : ret.src});
       
 
       for ( i = 0; i < products.length; ++i ) {
@@ -199,20 +201,20 @@ router.get('/buy/:sellername/:itemid/:price/:itemcountbef/:couponId', async (req
 
 
   await setter.setter("products", encodeURI(JSON.stringify(products))).then(
-    () => {
-      bar1.update(300, {name: "buy", workingname: "set products"});
+    (ret) => {
+      bar1.update(300, {name: "buy", workingname: "set products", src : ret.src});
     }
   );
 
   await setter.getter("products").then(
-    (res) => {
-      bar1.update(400, {name: "buy", workingname: "get products"});
+    (ret) => {
+      bar1.update(400, {name: "buy", workingname: "get products", src : ret.src});
     }
   );
 
   await setter.setter(temp1, c).then(
     (ret) => {
-      bar1.update(500, {name: "buy", workingname: "set buyer money"});
+      bar1.update(500, {name: "buy", workingname: "set buyer money", src : ret.src});
       
       bar1.stop();
       
@@ -251,24 +253,32 @@ router.get('/remove/:id', function(req, res, next) {
 });
 
 router.get('/get/:type/:id', async (req, res1, next) => {
-  var bar1 = new cliProgress.SingleBar({format: '{name}: [{bar}] {percentage}% | {workingname} | ETA: {eta}s |\n'}
+  var bar1 = new cliProgress.SingleBar({format: '{name}: [{bar}] {percentage}% | ETA: {eta}s | {workingname} |\n {src}\n'}
   , cliProgress.Presets.shades_classic);
-  bar1.start(200, 0, {name: "get", workingname: "get"});
+  bar1.start(200, 0, {name: "get", workingname: "get", src: ""});
   
 
   var re;
 
-  await setter.getter(req.params.id).then( (ret) => { re = ret; } );
-  bar1.update(100, {name: "get", workingname: "get money"});
+  await setter.getter(req.params.id).then( 
+    (ret) => { 
+      re = ret.ret; 
+      bar1.update(100, {name: "get", workingname: "get money", src : ret.src});
+    } 
+  );
   
-
-
+  
   if (req.params.type == 1) {
 
     localStorage.setItem("username", JSON.stringify(req.params.id));
     localStorage.setItem("money", JSON.stringify(re));
 
-    await setter.getter("products").then( (res) => { products = JSON.parse(decodeURI(res)); } );
+    await setter.getter("products").then( 
+      (ret) => { 
+        products = JSON.parse(decodeURI(ret.ret)); 
+        bar1.update(200, {name: "get", workingname: "update localstorage", src : ret.src});
+      } 
+    );
     
 
   } else if (req.params.type == 2) {
@@ -277,8 +287,6 @@ router.get('/get/:type/:id', async (req, res1, next) => {
 
   }
 
-  bar1.update(200, {name: "get", workingname: "update localstorage"});
-  
   bar1.stop();
 
   return re;
@@ -286,56 +294,73 @@ router.get('/get/:type/:id', async (req, res1, next) => {
 });
 
 router.get('/set/:id/:value', async (req, res, next) => {
-  var bar1 = new cliProgress.SingleBar({format: '{name}: [{bar}] {percentage}% | {workingname} | ETA: {eta}s |\n'}
+  var bar1 = new cliProgress.SingleBar({format: '{name}: [{bar}] {percentage}% | ETA: {eta}s | {workingname} |\n {src}\n'}
   , cliProgress.Presets.shades_classic);
-  bar1.start(100, 0, {name: "set", workingname: "set"});
+  bar1.start(100, 0, {name: "set", workingname: "set", src: ""});
   
+  await setter.setter(req.params.id, req.params.value).then(
+    (ret) => {
+      bar1.update(100, {name: "set", workingname: "set " + req.params.id, src : ret.src});
+    }
+  );
 
-  await setter.setter(req.params.id, req.params.value);
-
-  bar1.update(100, {name: "set", workingname: "set " + req.params.id});
+  
   
   bar1.stop();
 });
 
 router.get('/new/:id', async (req, res, next) => {
-  var bar1 = new cliProgress.SingleBar({format: '{name}: [{bar}] {percentage}% | {workingname} | ETA: {eta}s |\n'}
+  var bar1 = new cliProgress.SingleBar({format: '{name}: [{bar}] {percentage}% | ETA: {eta}s | {workingname} |\n {src}\n'}
   , cliProgress.Presets.shades_classic);
-  bar1.start(100, 0, {name: "new", workingname: "new"});
+  bar1.start(100, 0, {name: "new", workingname: "new", src: ""});
   
-  await setter.new_deploy(req.params.id);
+  await setter.new_deploy(req.params.id).then(
+    (ret) => {
+      bar1.update(100, {name: "new", workingname: "new " + req.params.id, src : ret.src});
+    }
+  );
 
-  bar1.update(100, {name: "new", workingname: "new " + req.params.id});
-  
   bar1.stop();
 });
 
 router.get('/init', async (req, res, next) => {
-  var bar1 = new cliProgress.SingleBar({format: '{name}: [{bar}] {percentage}% | {workingname} | ETA: {eta}s |\n'}
+  var bar1 = new cliProgress.SingleBar({format: '{name}: [{bar}] {percentage}% | ETA: {eta}s | {workingname} |\n {src}\n'}
   , cliProgress.Presets.shades_classic);
-  bar1.start(300, 0, {name: "init", workingname: "init"});
+  bar1.start(300, 0, {name: "init", workingname: "init", src: ""});
   
-  await setter.new_deploy("products");
-  bar1.update(100, {name: "init", workingname: "new products"});
+  await setter.new_deploy("products").then(
+    (ret) => {
+      bar1.update(100, {name: "init", workingname: "new products", src : ret.src});
+    }
+  );
+  
 
-  await setter.setter("products", encodeURI(JSON.stringify(products)));
-  bar1.update(200, {name: "init", workingname: "set products"});
-
-  await setter.getter("products");
-  bar1.update(300, {name: "init", workingname: "get products"});
+  await setter.setter("products", encodeURI(JSON.stringify(products))).then(
+    (ret) => {
+      bar1.update(200, {name: "init", workingname: "set products", src : ret.src});
+    }
+  );
+  
+  await setter.getter("products").then(
+    (ret) => {
+      bar1.update(300, {name: "init", workingname: "get products", src : ret.src});
+    }
+  );
+  
   
   bar1.stop();
 });
 
 router.get('/setproducts', async (req, res, next) => {
-  var bar1 = new cliProgress.SingleBar({format: '{name}: [{bar}] {percentage}% | {workingname} | ETA: {eta}s |\n'}
+  var bar1 = new cliProgress.SingleBar({format: '{name}: [{bar}] {percentage}% | ETA: {eta}s | {workingname} |\n {src}\n'}
   , cliProgress.Presets.shades_classic);
-  bar1.start(100, 0, {name: "setproducts", workingname: "setproducts"});
+  bar1.start(100, 0, {name: "setproducts", workingname: "setproducts", src: ""});
   
-	await setter.setter("products", encodeURI(JSON.stringify(products)));
-
-  bar1.update(100, {name: "setproducts", workingname: "set products"});
-  
+	await setter.setter("products", encodeURI(JSON.stringify(products))).then(
+    (ret) => {
+      bar1.update(100, {name: "setproducts", workingname: "set products", src : ret.src});
+    }
+  );
 
   bar1.stop();
 });
