@@ -43,7 +43,7 @@
             <div class="btn-group pull-right" role="group" aria-label="">
                 <a href="/add/{{ this.id }}" class="btn btn-secondary btn-default" role="button"><i class="fa fa-shopping-cart" aria-hidden="true"></i> Add to cart</a>
                 {{!-- <a href="" class="btn btn-secondary" role="button" style=""></a> --}}
-                <a href="/buy/{{this.seller}}/{{ this.id }}/{{this.price}}/{{this.count}}/{{coupuns}}" class="btn btn-secondary btn-default" role="button" onclick="
+                <a href="/buy/{{this.seller}}/{{ this.id }}/{{this.price}}/{{this.count}}/{{{../coupuns}}}/" class="btn btn-secondary btn-default" role="button" onclick="
                   console.log("123");
                   if({{this.count}} <= 0) {
                     console.log("123");
@@ -60,7 +60,7 @@
 
 <script>
   var info = document.getElementById("successinfo");
-  switch({{{coupuns}}}) {
+  switch(parseInt({{{coupuns}}})) {
     case 0: {
       document.getElementById("getsuccess").classList.remove("alert-success");
       document.getElementById("getsuccess").classList.add("alert-warning");

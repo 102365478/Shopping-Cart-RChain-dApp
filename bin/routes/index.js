@@ -69,7 +69,7 @@ router.get('/main/', async function (req, res, next) {
       products: products,
       username: temp1,
       money: tem,
-      coupuns: Math.round(Math.random() * 2),
+      coupuns: JSON.parse(Math.round(Math.random() * 2)),
       }
     );
 
