@@ -13,7 +13,7 @@ signInButton.addEventListener('click', async function(){
 
 const new_dep = async (name) => {
    let body = initBody(1,name);
-   var newName = '/new/' + name;
+   var newName = '/new/1/' + name;
    console.log(newName);
 
    await processPost(newName,null,body,'print');
@@ -58,9 +58,6 @@ document.getElementById('reg_btn').addEventListener('click', async () => {
     username = getUserName("reg_text");
 
     new_dep(`${username}`);
-    set(`${username}`, 100);
-
 
     loading.style.display = 'none';
-
 });
