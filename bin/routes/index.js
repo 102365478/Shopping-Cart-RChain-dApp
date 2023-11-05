@@ -312,17 +312,17 @@ router.get('/new/:type/:id', async (req, res, next) => {
 
   switch(req.params.type) {
     case '1': {
-      bar1.start(200, 0, {name: "new", workingname: "new", src: ""});
+      bar1.start(200, 0, {name: "newuser", workingname: "new", src: ""});
 
       await setter.new_deploy(req.params.id).then(
         (ret) => {
-          bar1.update(100, {name: "new", workingname: "new " + req.params.id, src : ret.src});
+          bar1.update(100, {name: "newuser", workingname: "new " + req.params.id, src : ret.src});
         }
       );
 
       setter.setter(req.params.id, 100).then(
         (ret) => {
-          bar1.update(200, {name: "new", workingname: "set " + req.params.id, src : ret.src});
+          bar1.update(200, {name: "newuser", workingname: "set " + req.params.id, src : ret.src});
           bar1.stop();
           res.end();
 
