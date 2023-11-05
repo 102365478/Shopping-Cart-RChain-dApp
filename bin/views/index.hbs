@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+{{!-- <div class="mask"> --}}
+    
+{{!-- </div> --}}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +17,11 @@
             <input type="text" id="reg_text" placeholder="Username">
             <input type="password" placeholder="Password">
             <button id="reg_btn">Register</button>
+                    <div class="loading" id="reg_loading" style="display: none;">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
            </form>
         </div>
         <div class="form-container sign-in-container">
@@ -21,6 +30,11 @@
             <input type="text" id="login_text" placeholder="Username">
             <input type="password" placeholder="Password">
             <button id="login_btn">Login</button>
+                    <div class="loading" id="login_loading" style="display: none;">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
             </form>
         </div>
         <div class="overlay-container">
@@ -29,11 +43,13 @@
                     <h1>Already have an account?</h1>
                     <p>Click me to login.</p>
                     <button class='ghost' id="signIn">Login</button>
+                    
                 </div>
                 <div class="overlay-panel overlay-right">
                     <h1>Don't have an account?</h1>
                     <p>Press me to register.</p>
                     <button class='ghost' id="signUp">Register</button>
+                    
                 </div>
             </div>
         </div>
@@ -242,6 +258,99 @@ button.ghost:active {
 .container.right-panel-active .overlay-right {
     transform: translateX(20%);
     transition: all 0.6s ease-in-out;
+}
+
+.loading,
+.loading > div {
+  position: relative;
+  box-sizing: border-box;
+}
+
+.loading {
+  display: block;
+  font-size: 0;
+  color: #000;
+}
+
+.loading.la-dark {
+  color: #333;
+}
+
+.loading > div {
+  display: inline-block;
+  float: none;
+  background-color: currentColor;
+  border: 0 solid currentColor;
+}
+
+.loading {
+  width: 32px;
+  height: 32px;
+}
+
+.loading > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 100%;
+  opacity: 0;
+  animation: ball-scale-multiple 1s 0s linear infinite;
+}
+
+.loading > div:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loading > div:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.loading.la-sm {
+  width: 16px;
+  height: 16px;
+}
+
+.loading.la-sm > div {
+  width: 16px;
+  height: 16px;
+}
+
+.loading.la-2x {
+  width: 64px;
+  height: 64px;
+}
+
+.loading.la-2x > div {
+  width: 64px;
+  height: 64px;
+}
+
+.loading.la-3x {
+  width: 96px;
+  height: 96px;
+}
+
+.loading.la-3x > div {
+  width: 96px;
+  height: 96px;
+}
+
+@keyframes ball-scale-multiple {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  5% {
+    opacity: 0.75;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
 }
 
 </style>

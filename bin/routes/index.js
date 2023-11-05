@@ -1,5 +1,6 @@
 var express = require('express');
 const bodyParser = require('body-parser');
+var http = require('http');
 
 var router = express.Router();
 var app = express();
@@ -32,6 +33,7 @@ const LocalStorage = require('node-localstorage').LocalStorage;
 const localStorage = new LocalStorage('./scratch');
 
 const Coupon = require('../public/Coupons/Service.js');
+const { resolve } = require('path');
 
 
 const uploadImage = async (imagePath) => {
@@ -248,7 +250,7 @@ router.get('/remove/:id', function(req, res, next) {
   res.redirect('/cart');
 });
 
-router.get('/get/:type/:id', async (req, res1, next) => {
+router.get('/get/:type/:id', async (req, res, next) => {
   var bar1 = new cliProgress.SingleBar({format: '{name}: [{bar}] {percentage}% | ETA: {eta}s | {workingname} |\n {src}\n'}
   , cliProgress.Presets.shades_classic);
   bar1.start(200, 0, {name: "get", workingname: "get", src: ""});
@@ -285,8 +287,7 @@ router.get('/get/:type/:id', async (req, res1, next) => {
 
   bar1.stop();
 
-  return re;
-
+  res.end();
 });
 
 router.get('/set/:id/:value', async (req, res, next) => {
@@ -299,10 +300,9 @@ router.get('/set/:id/:value', async (req, res, next) => {
       bar1.update(100, {name: "set", workingname: "set " + req.params.id, src : ret.src});
     }
   );
-
-  
   
   bar1.stop();
+  res.end()
 });
 
 router.get('/new/:id', async (req, res, next) => {
@@ -316,7 +316,7 @@ router.get('/new/:id', async (req, res, next) => {
     }
   );
 
-  bar1.stop();
+  res.end();
 });
 
 router.get('/init', async (req, res, next) => {

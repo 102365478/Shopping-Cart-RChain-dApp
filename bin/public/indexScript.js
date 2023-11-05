@@ -16,7 +16,7 @@ const new_dep = async (name) => {
    var newName = '/new/' + name;
    console.log(newName);
 
-   processPost(newName,null,body,'print');
+   await processPost(newName,null,body,'print');
 }
 
 const get = async (name) => {
@@ -25,7 +25,7 @@ const get = async (name) => {
     var srcName = "/get/1/" + name;
     console.log(srcName);
 
-    processPost(srcName,name,body,'setNameAndMoney');
+    await processPost(srcName,name,body,'setNameAndMoney');
 }
 
 const set = async (name, value) => {
@@ -35,23 +35,32 @@ const set = async (name, value) => {
     console.log(value);
     console.log(srcNameAndValue);
 
-    processPost(srcNameAndValue,null,body,'print');
+    await processPost(srcNameAndValue,null,body,'print');
 }
 
 let username;
 
-document.getElementById('login_btn').addEventListener('click', async function(){
+document.getElementById('login_btn').addEventListener('click', async () => {
+    var loading = document.getElementById("login_loading");
+    loading.style.display = 'block';
+
     username = getUserName("login_text");
-    let body = initBody(1,null);
-    await get(`${username}`);
+
+    get(`${username}`);
+
+    loading.style.display = 'none';
 });
 
-document.getElementById('reg_btn').addEventListener('click', async function(){
+document.getElementById('reg_btn').addEventListener('click', async () => {
+    var loading = document.getElementById("reg_loading");
+    loading.style.display = 'block';
+
     username = getUserName("reg_text");
 
-    new_dep(`${username}`).then(
-        () => {
-            set(`${username}`, 100);
-        }
-    );
+    new_dep(`${username}`);
+    set(`${username}`, 100);
+
+
+    loading.style.display = 'none';
+
 });
