@@ -61,13 +61,13 @@ document.getElementById('login_btn').addEventListener('click', async function(){
         if(idmap.get(username) == password){
             match = true;
         }
-    }else{Swal.fire('Not exist.','用户名不存在.','question');}
+    }else{Swal.fire('Not exist.','Username doesn\'t exist.','question');}
     
     if(exist == true && match == true){
         let body = initialBody.init(1,null);
         await get(`${username}`, password);
     }
-    else if(exist == true && match == false){Swal.fire('Wrong password!','密码错误!','error');}
+    else if(exist == true && match == false){Swal.fire('Wrong!','Password error!','error');}
 });
 
 document.getElementById('reg_btn').addEventListener('click', async function(){
@@ -77,27 +77,28 @@ document.getElementById('reg_btn').addEventListener('click', async function(){
     var accountFlag = actChain.process(username);
     var passwordFlag = pwdChain.process(password);
 
+    idmap.forEach((value,key)=>{
+        if(key == username){
+            Swal.fire('Not allowed','Username existed.','info');
+            accountFlag = 'RegisterAgain';
+            return;
+        }
+    })
+
     switch(accountFlag){
         case 'noNumber':
-            Swal.fire('Without number...', '用户名缺少数字...', 'warning');
-            ;break;
+            Swal.fire('Error', 'Username without number...', 'warning');break;
         case 'noLetter':
-            Swal.fire('Without letter...', '用户名缺少字母...', 'warning');break;
+            Swal.fire('Error', 'Username without letter...', 'warning');break;
         case 'noBoth':
-            Swal.fire('Without number and letter...', '用户名缺少数字和字母...', 'warning');break;
+            Swal.fire('Error', 'Username without number or letter...', 'warning');break;
         default :    
             switch(passwordFlag){
             case 'wrong':
-                Swal.fire('Password not allowed!','密码不合法!','warning');break;
+                Swal.fire('Error','Password not allowed!','warning');break;
             default : break ;
             };
     }
-    idmap.forEach((value,key)=>{
-        if(key == username){
-            Swal.fire('Already registered name.','用户名已被注册.','info');
-            accountFlag = 'RegisterAgain';
-        }
-    })
 
     if(accountFlag == 'complete' && passwordFlag == 'right'){
         idmap.set(username,password);
