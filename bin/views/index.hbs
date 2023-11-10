@@ -14,8 +14,8 @@
         <div class="form-container sign-up-container">
            <form action="#">
             <a href="/init/"><h1>Register</h1></a>
-            <input type="text" id="reg_text" placeholder="Username">
-            <input type="password" placeholder="Password">
+            <input type="text" id="reg_text" placeholder="账号名需要同时有数字和字母">
+            <input type="password" id="pwd" placeholder="密码需要同时有数字和字母，且长度大于五">
             <button id="reg_btn">Register</button>
                     <div class="loading" id="reg_loading" style="display: none;">
                         <div></div>
@@ -28,7 +28,7 @@
             <form action="#">
                 <a href="/main/"><h1>Login</h1></a>
             <input type="text" id="login_text" placeholder="Username">
-            <input type="password" placeholder="Password">
+            <input type="password" id="pwdt" placeholder="Password">
             <button id="login_btn">Login</button>
                     <div class="loading" id="login_loading" style="display: none;">
                         <div></div>
@@ -55,7 +55,11 @@
         </div>
     </div>
     
+
     <script type="module" src="/Index/indexScript.js"></script>
+    <script type="module" src="/Index/Chain.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    
 </body>
 
 

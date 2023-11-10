@@ -26,7 +26,6 @@ var fs = require('fs');
 
 var Cart = require('../models/cart');
 var products = JSON.parse(fs.readFileSync('./data/products.json', 'utf8'));
-
 const setter = require("../../lib/setter.js");
 
 const LocalStorage = require('node-localstorage').LocalStorage;
@@ -242,16 +241,15 @@ router.get('/remove/:id', function(req, res, next) {
   res.redirect('/cart');
 });
 
-router.get('/get/:type/:id', async (req, res, next) => {
+// login in
+router.get('/get/:type/:id/:pw', async (req, res, next) => {
   var bar1 = new cliProgress.SingleBar({format: '{name}: [{bar}] {percentage}% | ETA: {eta}s | {workingname} |\n {src}\n'}
   , cliProgress.Presets.shades_classic);
   bar1.start(200, 0, {name: "get", workingname: "get", src: ""});
   var barcount = 0;
-  
-
   var usermoney;
 
-  setter.getter(req.params.id).then( 
+  await setter.getter(req.params.id).then( 
     (ret) => { 
       usermoney = ret.ret; 
       barcount += 100;
@@ -268,7 +266,7 @@ router.get('/get/:type/:id', async (req, res, next) => {
     localStorage.setItem("username", JSON.stringify(req.params.id));
     localStorage.setItem("money", JSON.stringify(usermoney));
 
-    setter.getter("products").then( 
+    await setter.getter("products").then( 
       (ret) => { 
         products = JSON.parse(decodeURI(ret.ret)); 
         barcount += 100;
@@ -306,10 +304,10 @@ router.get('/set/:id/:value', async (req, res, next) => {
   res.end()
 });
 
-router.get('/new/:type/:id', async (req, res, next) => {
+// register
+router.get('/new/:type/:id/:pw', async (req, res, next) => {
   var bar1 = new cliProgress.SingleBar({format: '{name}: [{bar}] {percentage}% | ETA: {eta}s | {workingname} |\n {src}\n'}
   , cliProgress.Presets.shades_classic);
-
   switch(req.params.type) {
     case '1': {
       bar1.start(200, 0, {name: "newuser", workingname: "new", src: ""});
@@ -344,6 +342,7 @@ router.get('/new/:type/:id', async (req, res, next) => {
     }
   }
 
+  
 });
 
 router.get('/init', async (req, res, next) => {
@@ -391,5 +390,7 @@ router.get('/setproducts', async (req, res, next) => {
 router.get('/buyallincart/:couponId', async (req, res, next) => {
   
 }) 
+
+
 
 module.exports = router;
