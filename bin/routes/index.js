@@ -94,9 +94,9 @@ router.post('/newitem', async function (req, res) {
   bar1.start(200, 0, {name: "newitem", workingname: "newitem", src: ""});
   
 
-  var temp1 = localStorage.getItem("username");
+  var username = localStorage.getItem("username");
   //temp1 = parseInt(temp1);
-  temp1 = temp1.substring(1, temp1.length - 1);
+  username = username.substring(1, username.length - 1);
 
   var temppic;
 
@@ -107,11 +107,9 @@ router.post('/newitem', async function (req, res) {
     }
   );
 
-  
-
-  var a = {
+  var newitem = {
   "id": req.body.name,
-  "seller": temp1,
+  "seller": username,
   "description": req.body.name + " are <span class=\"label label-info\">" + req.body.price + " each</span>",
   "price": req.body.price,
   "count": req.body.count,
@@ -119,7 +117,7 @@ router.post('/newitem', async function (req, res) {
   "url": temppic
   }
 
-  products.unshift(a);
+  products.unshift(newitem);
   
   await setter.setter("products", encodeURI(JSON.stringify(products))).then(
     ret => {
@@ -127,8 +125,6 @@ router.post('/newitem', async function (req, res) {
     }
   );
   
-  
-
   bar1.stop();
 
   res.end();
@@ -138,93 +134,89 @@ router.post('/newitem', async function (req, res) {
 router.get('/buy/:sellername/:itemid/:price/:itemcountbef/:couponId', async (req, res, next) => {
   var bar1 = new cliProgress.SingleBar({format: '{name}: [{bar}] {percentage}% | ETA: {eta}s | {workingname} |\n {src}\n'}
   , cliProgress.Presets.shades_classic);
-  bar1.start(500, 0, {name: "buy", workingname: "buy", src: ""});
+  bar1.start(400, 0, {name: "buy", workingname: "buy", src: ""});
+  var barcount = 0;
 
-  var temp = localStorage.getItem("money");
-  var money  = JSON.parse(temp);
-  var a = JSON.parse(req.params.price);
-
+  var buyermoney  = JSON.parse(localStorage.getItem("money"));
+  
   let quantity = 1;
-  let sellingPrice = a;
   let couponId = req.params.couponId;
 
-  a = Coupon.couponService.calculate(quantity, sellingPrice, couponId);
+  var itemmoneyafter = Coupon.couponService.calculate(quantity, JSON.parse(req.params.price), couponId);
 
   if ( req.params.itemcountbef <= 0 ) {
     // document.getElementById("soldout").style.display = "none";
-    bar1.update(500, {name: "buy", workingname: "less than 0"});
+    bar1.update(400, {name: "buy", workingname: "less than 0"});
     bar1.stop();
     
     res.redirect('/main/');
   }
 
-  var s;
-  var b;
+  for ( i = 0; i < products.length; ++i ) {
+    if ( products[i].title == req.params.itemid ) {
+      products[i].count = req.params.itemcountbef - 1;
+
+      if ( products[i].count == 0 ) {
+        products[i].description = "<span class=\"label label-danger\">Sold Out!</span>";
+      }
+
+      break;
+    }
+  }
+
+  var sellermoneyafter;
   
-  await setter.getter(req.params.sellername).then(
+  setter.getter(req.params.sellername).then(
     (ret) => {
-      bar1.update(100, {name: "buy", workingname: "get seller money", src : ret.src});
+      barcount += 100;
+      bar1.update(barcount, {name: "buy", workingname: "get seller money", src : ret.src});
+      if( barcount == 400 ) {
+        bar1.stop();
+      }
       
       if (ret.ret == "NaN" || ret.ret == "null" || ret.ret == NaN || ret.ret == null) { ret.ret = 0; }
       
-      s = parseInt(ret.ret);
-      b = parseInt(ret.ret) + a;
+      sellermoneyafter = parseInt(ret.ret) + itemmoneyafter;
+
+      setter.setter(req.params.sellername, sellermoneyafter).then(
+        (ret) => {
+          barcount += 100;
+          bar1.update(barcount, {name: "buy", workingname: "set seller money", src : ret.src});
+          if( barcount == 400 ) {
+            bar1.stop();
+          }
+        }
+      );
     }
   );  
 
-  await setter.setter(req.params.sellername, b).then(
+  var buyername = localStorage.getItem("username");
+  buyername = buyername.substring(1, buyername.length - 1);
+
+  await setter.setter(buyername, buyermoney - itemmoneyafter).then(
     (ret) => {
-      bar1.update(200, {name: "buy", workingname: "set seller money", src : ret.src});
-      
-
-      for ( i = 0; i < products.length; ++i ) {
-
-        if ( products[i].title == req.params.itemid ) {
-          products[i].count = req.params.itemcountbef - 1;
-
-          if ( products[i].count == 0 ) {
-            products[i].description = "<span class=\"label label-danger\">Sold Out!</span>";
-          }
-
-          break;
-        }
+      barcount += 100;
+      bar1.update(barcount, {name: "buy", workingname: "set buyer money", src : ret.src});
+      if( barcount == 400 ) {
+        bar1.stop();
       }
-    }
-  );
-
-  var temp1 = localStorage.getItem("username");
-  temp1 = temp1.substring(1, temp1.length - 1);
-
-  var c = money - a;
-
-
-  await setter.setter("products", encodeURI(JSON.stringify(products))).then(
-    (ret) => {
-      bar1.update(300, {name: "buy", workingname: "set products", src : ret.src});
-    }
-  );
-
-  await setter.getter("products").then(
-    (ret) => {
-      bar1.update(400, {name: "buy", workingname: "get products", src : ret.src});
-    }
-  );
-
-  await setter.setter(temp1, c).then(
-    (ret) => {
-      bar1.update(500, {name: "buy", workingname: "set buyer money", src : ret.src});
       
-      bar1.stop();
-      
-      money = money - a;
-      localStorage.setItem("money", JSON.stringify(money));
-      res.redirect('/main/');
+      buyermoney = buyermoney - itemmoneyafter;
+      localStorage.setItem("money", JSON.stringify(buyermoney));
+
+      setter.setter("products", encodeURI(JSON.stringify(products))).then(
+        (ret) => {
+          barcount += 100;
+          bar1.update(barcount, {name: "buy", workingname: "set products", src : ret.src});
+          if( barcount == 400 ) {
+            bar1.stop();
+          }
+        }
+      );
     }
   );
 
-
-
-
+  res.redirect('/main/');
 });
 
 router.get('/cart', function(req, res, next) {
@@ -254,14 +246,19 @@ router.get('/get/:type/:id', async (req, res, next) => {
   var bar1 = new cliProgress.SingleBar({format: '{name}: [{bar}] {percentage}% | ETA: {eta}s | {workingname} |\n {src}\n'}
   , cliProgress.Presets.shades_classic);
   bar1.start(200, 0, {name: "get", workingname: "get", src: ""});
+  var barcount = 0;
   
 
-  var re;
+  var usermoney;
 
-  await setter.getter(req.params.id).then( 
+  setter.getter(req.params.id).then( 
     (ret) => { 
-      re = ret.ret; 
-      bar1.update(100, {name: "get", workingname: "get money", src : ret.src});
+      usermoney = ret.ret; 
+      barcount += 100;
+      bar1.update(barcount, {name: "get", workingname: "get money", src : ret.src});
+      if( barcount == 200 ) {
+        bar1.stop();
+      }
     } 
   );
   
@@ -269,12 +266,16 @@ router.get('/get/:type/:id', async (req, res, next) => {
   if (req.params.type == 1) {
 
     localStorage.setItem("username", JSON.stringify(req.params.id));
-    localStorage.setItem("money", JSON.stringify(re));
+    localStorage.setItem("money", JSON.stringify(usermoney));
 
-    await setter.getter("products").then( 
+    setter.getter("products").then( 
       (ret) => { 
         products = JSON.parse(decodeURI(ret.ret)); 
-        bar1.update(200, {name: "get", workingname: "update localstorage", src : ret.src});
+        barcount += 100;
+        bar1.update(barcount, {name: "get", workingname: "update localstorage", src : ret.src});
+        if( barcount == 200 ) {
+          bar1.stop();
+        }
       } 
     );
     
@@ -305,18 +306,44 @@ router.get('/set/:id/:value', async (req, res, next) => {
   res.end()
 });
 
-router.get('/new/:id', async (req, res, next) => {
+router.get('/new/:type/:id', async (req, res, next) => {
   var bar1 = new cliProgress.SingleBar({format: '{name}: [{bar}] {percentage}% | ETA: {eta}s | {workingname} |\n {src}\n'}
   , cliProgress.Presets.shades_classic);
-  bar1.start(100, 0, {name: "new", workingname: "new", src: ""});
-  
-  await setter.new_deploy(req.params.id).then(
-    (ret) => {
-      bar1.update(100, {name: "new", workingname: "new " + req.params.id, src : ret.src});
-    }
-  );
 
-  res.end();
+  switch(req.params.type) {
+    case '1': {
+      bar1.start(200, 0, {name: "newuser", workingname: "new", src: ""});
+
+      await setter.new_deploy(req.params.id).then(
+        (ret) => {
+          bar1.update(100, {name: "newuser", workingname: "new " + req.params.id, src : ret.src});
+        }
+      );
+
+      setter.setter(req.params.id, 100).then(
+        (ret) => {
+          bar1.update(200, {name: "newuser", workingname: "set " + req.params.id, src : ret.src});
+          bar1.stop();
+          res.end();
+
+        }
+      );
+      break;
+    }
+    case '2': {
+      bar1.start(100, 0, {name: "new", workingname: "new", src: ""});
+
+      await setter.new_deploy(req.params.id).then(
+        (ret) => {
+          bar1.update(100, {name: "new", workingname: "new " + req.params.id, src : ret.src});
+          bar1.stop();
+        }
+      );
+
+      break;
+    }
+  }
+
 });
 
 router.get('/init', async (req, res, next) => {
@@ -361,5 +388,8 @@ router.get('/setproducts', async (req, res, next) => {
   bar1.stop();
 });
 
+router.get('/buyallincart/:couponId', async (req, res, next) => {
+  
+}) 
 
 module.exports = router;
