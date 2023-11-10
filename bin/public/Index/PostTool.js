@@ -1,60 +1,40 @@
 class PostTool {
-
-    constructor(arg1,arg2,body,process){
+    constructor(arg1, arg2, body, process) {
         this.arg1 = arg1;
         this.arg2 = arg2;
         this.body = body;
         this.process = process;
     }
 
-    makePost(route, body)  {
-        if(body==null){
-          console.log('Body is null.');
+    makePost(route, body) {
+        if (body == null) {
+            console.log('Body is null.');
         }
-    
-        let request = {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-            'Content-type': 'application/json',
-          }
-        };
-    
-        console.log("makepost() before return");
-    
-    
-        return fetch(route, request)
-          .then(ret => {
-            console.log("makepost() in return then");
-            //return ret.json();
-          });
-      }
 
-    processPost(arg1,arg2,body,process) {
-        // arg1 : the first argument of makePost()
-        // arg2 ... : the additional arguments that will be processed
-        // body : the second argument of makePost()
-        // process : the way of processing the returned value
-        this.makePost(arg1,body).then(
-            ret => {
-                this.processRet(ret,process,arg2);
+        let request = {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-type': 'application/json',
             }
-        )
+        };
+        return fetch(route, request)
+            .then(ret => {
+                //return ret.json();
+            });
     }
 
-    processRet(ret,process,arg2) {
-
-        if(ret == null){
+    processRet(ret, process, arg2) {
+        if (ret == null) {
             console.log('[processFunc] Ret is null.');
         }
-    
-        if(process == 'print'){
+
+        if (process == 'print') {
             //print the returned value
             ret => {
                 console.log(ret);
             }
-        }
-        else if(process == 'setNameAndMoney'){
+        } else if (process == 'setNameAndMoney') {
             //set username and moeny 
             ret => {
                 localStorage.setItem("username", JSON.stringify(arg2));
@@ -64,7 +44,20 @@ class PostTool {
         }
     }
 
-
+    // 抽象方法，需要在子类中实现
+    processPost() {
+        throw new Error("You have to implement the method!");
+    }
 }
 
-export var postTool = new PostTool();
+class ConcretePostTool extends PostTool {
+    processPost(arg1, arg2, body, process) {
+        this.makePost(arg1, body).then(
+            ret => {
+                this.processRet(ret, process, arg2);
+            }
+        )
+    }
+}
+
+export var postTool = new ConcretePostTool();

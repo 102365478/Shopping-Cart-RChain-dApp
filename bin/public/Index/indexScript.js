@@ -1,7 +1,8 @@
 import { postTool } from './PostTool.js';
+import { flag1Strategy, flag2Strategy} from './initStrategy.js';
 import { initialBody } from './initStrategy.js';
 import { getsTool } from './initStrategy.js';
-import { actChain,pwdChain } from './Chain.js';
+import { actChain,pwdChain } from './CheckChain.js';
 const container = document.querySelector('#container');
 const signInButton = document.querySelector('#signIn');
 const signUpButton = document.querySelector('#signUp');
@@ -14,7 +15,7 @@ signInButton.addEventListener('click', async function(){
 });
 
 const new_dep = async (name, pw) => {
-   let body = initialBody.init(1,name);
+   let body = initialBody.init(flag1Strategy ,name);
    var newName = '/new/1/' + name +"/"+pw;
    console.log(newName);
 
@@ -22,7 +23,7 @@ const new_dep = async (name, pw) => {
 }
 
 const get = async (name,pw) => {
-    let body = initialBody.init(1,name);
+    let body = initialBody.init(flag1Strategy,name);
 
     var srcName = "/get/1/" + name+"/"+pw;
     console.log(srcName);
@@ -31,7 +32,7 @@ const get = async (name,pw) => {
 }
 
 const set = async (name, value) => {
-    let body = initialBody.init(2,name,value);
+    let body = initialBody.init(flag2Strategy,name,value);
 
     var srcNameAndValue = "/set/" + name + "/" + value;
     console.log(value);
@@ -64,7 +65,7 @@ document.getElementById('login_btn').addEventListener('click', async function(){
     }else{Swal.fire('Not exist.','Username doesn\'t exist.','question');}
     
     if(exist == true && match == true){
-        let body = initialBody.init(1,null);
+        let body = initialBody.init(flag1Strategy,null);
         await get(`${username}`, password);
     }
     else if(exist == true && match == false){Swal.fire('Wrong!','Password error!','error');}
