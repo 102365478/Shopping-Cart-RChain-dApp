@@ -137,6 +137,8 @@ router.get('/buy/:sellername/:itemid/:price/:itemcountbef/:couponId', async (req
   var barcount = 0;
 
   var buyermoney  = JSON.parse(localStorage.getItem("money"));
+  var buyername = localStorage.getItem("username");
+  buyername = buyername.substring(1, buyername.length - 1);
   
   let quantity = 1;
   let couponId = req.params.couponId;
@@ -149,6 +151,15 @@ router.get('/buy/:sellername/:itemid/:price/:itemcountbef/:couponId', async (req
     bar1.stop();
     
     res.redirect('/main/');
+    res.end();
+    return;
+  } else if ( req.params.sellername == buyername ) {
+    bar1.update(400, {name: "buy", workingname: "seller equals buyer"});
+    bar1.stop();
+    
+    res.redirect('/main/');
+    res.end();
+    return;
   }
 
   for ( i = 0; i < products.length; ++i ) {
@@ -189,9 +200,6 @@ router.get('/buy/:sellername/:itemid/:price/:itemcountbef/:couponId', async (req
     }
   );  
 
-  var buyername = localStorage.getItem("username");
-  buyername = buyername.substring(1, buyername.length - 1);
-
   await setter.setter(buyername, buyermoney - itemmoneyafter).then(
     (ret) => {
       barcount += 100;
@@ -209,13 +217,12 @@ router.get('/buy/:sellername/:itemid/:price/:itemcountbef/:couponId', async (req
           bar1.update(barcount, {name: "buy", workingname: "set products", src : ret.src});
           if( barcount == 400 ) {
             bar1.stop();
+            res.redirect('/main/');
           }
         }
       );
     }
   );
-
-  res.redirect('/main/');
 });
 
 router.get('/cart', function(req, res, next) {
@@ -273,6 +280,7 @@ router.get('/get/:type/:id/:pw', async (req, res, next) => {
         bar1.update(barcount, {name: "get", workingname: "update localstorage", src : ret.src});
         if( barcount == 200 ) {
           bar1.stop();
+          res.end();
         }
       } 
     );
@@ -284,9 +292,7 @@ router.get('/get/:type/:id/:pw', async (req, res, next) => {
 
   }
 
-  bar1.stop();
 
-  res.end();
 });
 
 router.get('/set/:id/:value', async (req, res, next) => {
@@ -301,7 +307,6 @@ router.get('/set/:id/:value', async (req, res, next) => {
   );
   
   bar1.stop();
-  res.end()
 });
 
 // register
@@ -323,7 +328,6 @@ router.get('/new/:type/:id/:pw', async (req, res, next) => {
           bar1.update(200, {name: "newuser", workingname: "set " + req.params.id, src : ret.src});
           bar1.stop();
           res.end();
-
         }
       );
       break;
@@ -355,7 +359,6 @@ router.get('/init', async (req, res, next) => {
       bar1.update(100, {name: "init", workingname: "new products", src : ret.src});
     }
   );
-  
 
   await setter.setter("products", encodeURI(JSON.stringify(products))).then(
     (ret) => {
@@ -369,7 +372,7 @@ router.get('/init', async (req, res, next) => {
     }
   );
   
-  
+
   bar1.stop();
 });
 

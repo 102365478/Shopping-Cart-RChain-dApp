@@ -2,7 +2,8 @@ import { postTool } from './PostTool.js';
 import { flag1Strategy, flag2Strategy} from './initStrategy.js';
 import { initialBody } from './initStrategy.js';
 import { getsTool } from './initStrategy.js';
-import { actChain,pwdChain } from './CheckChain.js';
+import { actChain, pwChain } from './Chain.js';
+
 const container = document.querySelector('#container');
 const signInButton = document.querySelector('#signIn');
 const signUpButton = document.querySelector('#signUp');
@@ -76,7 +77,7 @@ document.getElementById('reg_btn').addEventListener('click', async function(){
     password = getsTool.getName("pwd");
 
     var accountFlag = actChain.process(username);
-    var passwordFlag = pwdChain.process(password);
+    var passwordFlag = pwChain.process(password);
 
     idmap.forEach((value,key)=>{
         if(key == username){
@@ -86,6 +87,9 @@ document.getElementById('reg_btn').addEventListener('click', async function(){
         }
     })
 
+    console.log(accountFlag);
+    console.log(passwordFlag);
+
     switch(accountFlag){
         case 'noNumber':
             Swal.fire('Error', 'Username without number...', 'warning');break;
@@ -93,15 +97,20 @@ document.getElementById('reg_btn').addEventListener('click', async function(){
             Swal.fire('Error', 'Username without letter...', 'warning');break;
         case 'noBoth':
             Swal.fire('Error', 'Username without number or letter...', 'warning');break;
-        default :    
-            switch(passwordFlag){
-            case 'wrong':
-                Swal.fire('Error','Password not allowed!','warning');break;
-            default : break ;
-            };
     }
 
-    if(accountFlag == 'complete' && passwordFlag == 'right'){
+    switch(passwordFlag){
+        case 'noNumber':
+            Swal.fire('Error', 'Password without number...', 'warning');break;
+        case 'noLetter':
+            Swal.fire('Error', 'Password without letter...', 'warning');break;
+        case 'noBoth':
+            Swal.fire('Error', 'Password without number or letter...', 'warning');break;
+        case 'wrong':
+            Swal.fire('Error','Password length must longer than 5!','warning');break;
+    }
+
+    if(accountFlag == 'complete' && passwordFlag == 'complete'){
         idmap.set(username,password);
         await new_dep(`${username}`, password);
     }

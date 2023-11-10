@@ -2,11 +2,11 @@
 <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
 <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.1/css/font-awesome.min.css" />
 <link rel='stylesheet' href='/stylesheets/style.css' />
-
+<link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.6.1/css/font-awesome.min.css" />
 
 {{!-- <h1>{{title}}</h1> --}}
-<h1>Hi! {{username}}, your money: {{money}} <a href="/get/1/{{username}}" class="btn btn-info btn-xs" role="button">Refresh</a></h1>
-
+<h1><span style="font-weight: bold; font-size: 1.2em; font-family: 'STLiti', serif;">Hi!</span> <span style="color: rgba(58, 196, 205, 1); font-family: 'Helvetica', sans-serif;font-style: italic;">{{username}}</span><br>
+<span style="font-family: Times New Roman;">your money:</span> <span style="font-family: Courier New;">{{money}}</span> <a href="/get/1/{{username}}" class="btn btn-info btn-xs" role="button"><i class="fa fa-refresh" aria-hidden="true"></i></a></h1>
 <div id="soldout" class="alert alert-info fade in" >
 	<button type="button" class="close" data-dismiss="alert">&times;</button>
 	<strong>Click to get free coupuns!</strong>
@@ -28,7 +28,7 @@
   
     
     <div class="col-md-3 ml-15">
-      <div class="thumbnail row">
+      <div class="thumbnail row {{#if this.count}} {{else}}sold-out{{/if}}">
         <div class="caption col-md-7">
           <h3>{{ this.title }}</h3>
             <p class="seller">seller: {{{this.seller}}}</p>
@@ -42,10 +42,10 @@
         <img src="{{{this.url}}}" alt="" id="myimg" style="display: block; padding: 0; position: relative; top: 30px; right: 28px;" class="col-md-5"/>
         <div class="clearfix">
             <div class="btn-group pull-right" role="group" aria-label="">
-                <a href="/add/{{ this.id }}" class="btn btn-secondary btn-default" role="button">
+                <a href="/add/{{ this.id }}" class="btn btn-secondary btn-default {{#unless this.count}}disabled{{/unless}}" role="button">
                 <i class="fa fa-shopping-cart" aria-hidden="true"></i> Add to cart</a>
 
-                <a href="/buy/{{this.seller}}/{{ this.id }}/{{this.price}}/{{this.count}}/0/" class="btn btn-secondary btn-default" role="button">
+                <a href="/buy/{{this.seller}}/{{ this.id }}/{{this.price}}/{{this.count}}/0/" class="btn btn-secondary btn-default {{#unless this.count}}disabled{{/unless}}" role="button">
                 <i class="fa fa-shopping-cart" aria-hidden="true"></i> Buy now!</a>
 
                 <a id="withcoupon" style="display: none;" href="/buy/{{this.seller}}/{{ this.id }}/{{this.price}}/{{this.count}}/{{{../coupuns}}}/" class="btn btn-success btn-default" role="button">
@@ -81,3 +81,15 @@
 
 
 </script>
+<style>
+.sold-out {
+  background-color: #ccc; /* 灰色 */
+}
+.sold-out p ,h3{
+  color: #968787; /* 只有段落文字变灰 */
+}
+.sold-out .price,
+.sold-out .fa-tag {
+  color: #968787; /* 价格和标签文字变灰 */
+}
+</style>
