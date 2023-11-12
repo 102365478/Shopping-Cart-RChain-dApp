@@ -34,6 +34,10 @@ const localStorage = new LocalStorage('./scratch');
 const Coupon = require('../public/Coupons/Service.js');
 const { resolve } = require('path');
 
+const load = async () => {
+  const rho_deploy = require('../../lib/rho_deploy.js');
+  rho_deploy.func_deploy_fromfile('../rho/cart.rho', -1);
+}
 
 const uploadImage = async (imagePath) => {
 

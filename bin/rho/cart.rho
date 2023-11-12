@@ -1,0 +1,80 @@
+new product, error, coupons ,applyCoupon ,setProduct ,getProduct in {
+	
+		contract getProduct(ret) = {
+			for (@info <- product) {
+				match info {
+					{ "name" : String, "price" : Int } => {
+						ret!(info) | product!(info)
+					}
+					_ => {
+						error!("Error: Product info is not valid.")
+					}
+				}
+			}
+		}
+		|
+		contract setProduct(@newInfo) = {
+			for (_ <- product) {
+				match newInfo {
+					{ "name" : String, "price" : Int } => {
+						product!(newInfo)
+					}
+					_ => {
+						error!("Error: New product info is not valid.")
+					}
+				}
+			}
+		}
+		|
+		contract applyCoupon(@couponCode, ret) = {
+            for (@info <- product) {
+                match info {
+                { "name" : String, "price" : Int } => {
+                    for (@coupon <- coupons) {
+                    match (couponCode, coupon) {
+                        ("COUPON10", { "code" : "COUPON10", "discount" : Int }) => {
+                        product!({"name" : info.get("name"), "price" : info.get("price") - coupon.get("discount")}) | ret!(true) | coupons!(coupon)
+                        }
+                        _ => {
+                        ret!(false) | coupons!(coupon)
+                        }
+                    }
+                    }
+                }
+                _ => {
+                    error!("Error: Product info is not valid.")
+                }
+                }
+            }
+            }
+
+	
+	|
+	product!({"name" : "Sample Product", "price" : 100})
+	|
+	coupons!({"code" : "COUPON10", "discount" : 10})
+  |
+  new wallet, balance in {
+  contract wallet(@{"getBalance"}, ret) = {
+    for (@b <- balance) {
+      balance!(b) | ret!(b)
+    }
+  } |
+  contract wallet(@{"deposit"}, @amount) = {
+    for (@b <- balance) {
+      balance!(b + amount)
+    }
+  } |
+  contract wallet(@{"withdraw"}, @amount, ret) = {
+    for (@b <- balance) {
+      if (b >= amount) {
+        balance!(b - amount) | ret!(true)
+      } else {
+        balance!(b) | ret!(false)
+      }
+    }
+  } |
+  balance!(0)  // 初始余额为0
+}
+}
+
