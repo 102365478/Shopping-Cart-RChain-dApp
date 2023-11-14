@@ -1,5 +1,4 @@
 //定义一个抽象的优惠券计算器类
-
 class AbstractCouponCalculator {
     constructor(couponType) {
         this.couponType = couponType;
@@ -15,7 +14,6 @@ class AbstractCouponCalculator {
 }
 
 //定义优惠券计算器工厂
-
 class CouponCalculateFactory {
     constructor() {
         this.calculatorMap = {};
