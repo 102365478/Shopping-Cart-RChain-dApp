@@ -2,15 +2,23 @@
 
 A rchain shopping cart dapp demo.
 
-I achieved login/register based on blockchain, upload/buy item based on blockchain.
+See the demonstration [here](https://github.com/Alanxtl/Shopping-Cart-RChain-dApp/assets/25652981/8e7e6d4b-d487-4074-928c-f181e8214e8c).
 
-My work mainly focused on the usage of blockchain.
+We developed login/register page and upload/buy item page based on blockchain.
 
-Using hello-rchain api to interact with rchain blockchain, hello-rchain is the origin repo I forked from, which is based on rchain-toolkit api.
+Our work mainly focus on the usage of blockchain, instead of focusing on the desgination of the frontend.
+
+We use hello-rchain api to interact with rchain blockchain, hello-rchain is the origin repository I forked from, which is based on rchain-toolkit api.
+
+
 
 ## Prerequisites
 
-To use my dapp you need node.js env, node.js v18.18.0 and Ubuntu 20.04 is my working env.
+### Environment
+
+Our work is based on `node.js v18.18.0` and `Ubuntu 20.04`.
+
+### Deployment
 
 1. This project uses CLOUDINARY as the online image hosting platform, so you need to configure the CLOUDINARY environment before deploying the project.
 
@@ -26,33 +34,55 @@ To use my dapp you need node.js env, node.js v18.18.0 and Ubuntu 20.04 is my wor
 
     You can find more details on [CLOUDINARY](https://cloudinary.com/documentation/node_quickstart#4_transform_the_image).
 
-2. Because the project is based on hello-rchain, you need to clone my project and config the rchain following the guidance of [hello-rchain](https://github.com/Alice2O3/Hello-RChain).
+2. Because the project is based on hello-rchain, you need to clone **our** project and config the rchain following the guidance of [hello-rchain](https://github.com/Alice2O3/Hello-RChain).
+
+3. change directory to our project root directory, and install node packages.
+
+    ```bash
+    cd ~/Shopping-Cart-RChain-dApp
+    npm install
+    ```
+
+4. change directory to the bin directory, and install node packages.
+
+    ```bash
+    cd bin
+    npm install
+    ```
 
 ## Usage
 
-After cloning my dapp, `cd` to my project root directory.
+0. Make sure you have configed the RChain and Cloudinary environment in `Prerequisites Deployment`.
 
-0. Make sure you have configed the rchain environment in `prerequisites 2`.
-
-1. Delete everything in `rnode0` directory, copy everything from folder `rnode0 (override)` to folder `rnode0`.
-
-   Whenever you want to reset the blockchain, just copy everything from folder `rnode0 (override)` to folder `rnode0`.
-
-2. Starting rchain server
+1. change directory to our project root directory.
 
     ```bash
-    npm install
+    cd ~/Shopping-Cart-RChain-dApp
+    ```
+
+3. Delete everything in `rnode0` directory, copy everything from folder `rnode0 (override)` to folder `rnode0`.
+
+   Whenever you want to reset the blockchain, just override `rnode0` with `rnode0 (override)`.
+
+4. Start rchain server
+
+    ```bash
     npm run rnode
     ```
 
-3. In another terminal, cd to the `bin` directory of our project and run the following command to start nodejs server:
+5. In another terminal, cd to the `bin` directory of our project.
 
     ```bash
-    npm install
-    npm run start
+    cd ~/Shopping-Cart-RChain-dApp/bin
     ``` 
     
-4. Open your browse `localhost:3000` to use our dapp.
+6. Start node.js clinent.
+
+    ```bash
+    npm run start
+    ``` 
+   
+8. Open your browse and open `localhost:3000` to use our dapp.
 
 ## Credits
 
